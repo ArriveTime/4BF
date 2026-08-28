@@ -68,11 +68,11 @@
             background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
             color: white;
             text-align: center;
-            padding: 50px 20px;
+            padding: 40px 20px;
         }
 
         .hero h1 { font-size: 2.2rem; margin-bottom: 10px; }
-        .hero p { font-size: 1.05rem; max-width: 650px; margin: 0 auto 20px; }
+        .hero p { font-size: 1.05rem; max-width: 650px; margin: 0 auto 15px; }
 
         /* Main Container */
         .main-container {
@@ -83,25 +83,30 @@
             flex: 1;
         }
 
-        /* Compact Horizontal Category Hubs Row */
+        /* STRICT HORIZONTAL CATEGORY ROW (No Vertical Stacking) */
+        .category-row-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 35px;
+            padding-bottom: 10px;
+        }
+
         .category-grid {
             display: flex;
             flex-direction: row;
-            justify-content: center;
+            flex-wrap: nowrap;
+            justify-content: space-between;
             align-items: stretch;
             gap: 15px;
-            margin-bottom: 35px;
-            flex-wrap: wrap;
             width: 100%;
+            min-width: 800px;
         }
 
         .category-card {
-            flex: 1;
-            min-width: 200px;
-            max-width: 250px;
+            flex: 1 1 0px;
             background: var(--card-bg);
             border-radius: 10px;
-            padding: 16px 14px;
+            padding: 16px 12px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             border-top: 4px solid var(--primary-teal);
@@ -115,8 +120,8 @@
         .category-card.care { border-top-color: #27ae60; }
         .category-card.directory { border-top-color: #8e44ad; }
 
-        .category-card h3 { font-size: 1rem; margin-bottom: 6px; }
-        .category-card p { font-size: 0.82rem; color: #666; line-height: 1.3; }
+        .category-card h3 { font-size: 0.95rem; margin-bottom: 6px; white-space: nowrap; }
+        .category-card p { font-size: 0.8rem; color: #666; line-height: 1.3; }
 
         .icon-box { font-size: 1.8rem; margin-bottom: 6px; }
 
@@ -134,7 +139,7 @@
 
         .listings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             width: 100%;
         }
@@ -149,9 +154,8 @@
             flex-direction: column;
         }
 
-        /* Fixed Image Aspect Ratio to Prevent Stretching/Blurring */
         .profile-img {
-            height: 220px;
+            height: 200px;
             width: 100%;
             object-fit: cover;
             object-position: center;
@@ -268,27 +272,29 @@
 
     <div class="main-container">
 
-        <!-- Compact Horizontal Category Cards Row -->
-        <div class="category-grid">
-            <div class="category-card dating" onclick="switchTab('dating')">
-                <div class="icon-box">❤️</div>
-                <h3>Pet Lovers Dating</h3>
-                <p>Single dog & cat owners matching through shared pet bios.</p>
-            </div>
-            <div class="category-card playdates" onclick="switchTab('playdates')">
-                <div class="icon-box">🐕</div>
-                <h3>Pack Playdates</h3>
-                <p>Local walk groups, dog park runs, and feline play sessions.</p>
-            </div>
-            <div class="category-card care" onclick="switchTab('care')">
-                <div class="icon-box">🤝</div>
-                <h3>Community Care</h3>
-                <p>Neighbor pet-sitting swaps, advice, and emergency help.</p>
-            </div>
-            <div class="category-card directory" onclick="switchTab('directory')">
-                <div class="icon-box">☕</div>
-                <h3>Pet Life Directory</h3>
-                <p>Dog-friendly patios, cat cafes, hotels, and veterinarian reviews.</p>
+        <!-- HORIZONTAL CATEGORY CARDS (Side-by-side left to right) -->
+        <div class="category-row-wrapper">
+            <div class="category-grid">
+                <div class="category-card dating" onclick="switchTab('dating')">
+                    <div class="icon-box">❤️</div>
+                    <h3>Pet Lovers Dating</h3>
+                    <p>Single dog & cat owners matching through pet bios.</p>
+                </div>
+                <div class="category-card playdates" onclick="switchTab('playdates')">
+                    <div class="icon-box">🐕</div>
+                    <h3>Pack Playdates</h3>
+                    <p>Local walk groups and dog park runs.</p>
+                </div>
+                <div class="category-card care" onclick="switchTab('care')">
+                    <div class="icon-box">🤝</div>
+                    <h3>Community Care</h3>
+                    <p>Neighbor pet-sitting swaps and advice.</p>
+                </div>
+                <div class="category-card directory" onclick="switchTab('directory')">
+                    <div class="icon-box">☕</div>
+                    <h3>Pet Life Directory</h3>
+                    <p>Dog-friendly patios, cafes, and hotels.</p>
+                </div>
             </div>
         </div>
 
