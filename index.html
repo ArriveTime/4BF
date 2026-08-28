@@ -59,6 +59,28 @@
         }
         .nav-link.active, .nav-link:hover { background-color: var(--primary-teal); color: white; }
 
+        /* Auth Nav Actions */
+        .auth-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-login-nav {
+            background: transparent;
+            border: 1.5px solid var(--primary-teal);
+            color: var(--primary-teal);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-login-nav:hover {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
         .btn-cta {
             background-color: var(--accent-orange);
             color: white;
@@ -166,7 +188,7 @@
         .category-card p { font-size: 0.78rem; color: #666; }
         .icon-box { font-size: 1.6rem; margin-bottom: 4px; }
 
-        /* HORIZONTAL CATEGORIES ROW */
+        /* Horizontal Category Items */
         .section-header {
             font-size: 1.3rem;
             margin-bottom: 18px;
@@ -264,7 +286,7 @@
             background: #eee;
         }
 
-        /* Modal Styling */
+        /* Modal & Tabs Styling */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -284,6 +306,29 @@
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .modal-tab-switch {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 18px;
+        }
+
+        .modal-tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .modal-tab-btn.active {
+            color: var(--primary-teal);
+            border-bottom-color: var(--primary-teal);
         }
 
         .form-group { margin-bottom: 14px; }
@@ -318,7 +363,12 @@
             <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
             <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
         </ul>
-        <button class="btn-cta" id="authBtn" onclick="openModal('userModal')">+ Join 4BF</button>
+
+        <!-- Auth Navigation Buttons -->
+        <div class="auth-actions" id="authNavActions">
+            <button class="btn-login-nav" onclick="openModal('userModal', 'login')">Log In</button>
+            <button class="btn-cta" onclick="openModal('userModal', 'register')">+ Join 4BF</button>
+        </div>
     </nav>
 
     <!-- Hero Header -->
@@ -357,10 +407,9 @@
 
         <h2 class="section-header">🐾 Featured Community Listings</h2>
 
-        <!-- SINGLE HORIZONTAL ROW OF CATEGORIES -->
+        <!-- Featured Listings Row -->
         <div class="horizontal-categories-row" id="all-listings-container">
             
-            <!-- Category 1: Singles/Dating -->
             <div class="category-item-card cat-dating">
                 <div class="category-header-title">❤️ Pet Lovers Dating</div>
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600" class="profile-img" alt="Sarah and Dog">
@@ -372,7 +421,6 @@
                 </div>
             </div>
 
-            <!-- Category 2: Playdates -->
             <div class="category-item-card cat-playdates">
                 <div class="category-header-title">🐕 Local Playdates & Pack Walks</div>
                 <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600" class="profile-img" alt="Dogs Playing">
@@ -384,7 +432,6 @@
                 </div>
             </div>
 
-            <!-- Category 3: Community Care -->
             <div class="category-item-card cat-care">
                 <div class="category-header-title">🤝 Neighbor Pet Care Exchange</div>
                 <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600" class="profile-img" alt="Cat Sitting">
@@ -396,7 +443,6 @@
                 </div>
             </div>
 
-            <!-- Category 4: Directory -->
             <div class="category-item-card cat-directory">
                 <div class="category-header-title">☕ Pet-Friendly Places & Directory</div>
                 <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=600" class="profile-img" alt="Cafe Patio">
@@ -410,7 +456,7 @@
 
         </div>
 
-        <!-- NEW: LIVE COMMUNITY MEMBERS FROM FIRESTORE -->
+        <!-- Live Community Profiles -->
         <h2 class="section-header">⭐ Newly Joined 4BF Profiles</h2>
         <div class="horizontal-categories-row" id="live-members-container">
             <p style="color: #666; font-size: 0.9rem; padding: 10px;">Loading community profiles...</p>
@@ -418,23 +464,38 @@
 
     </div>
 
-    <!-- Registration & Profile Creation Modal -->
+    <!-- Auth Modal (Login / Register) -->
     <div class="modal-overlay" id="userModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
-            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community to connect with other owners.</p>
             
-            <!-- Quick Google Sign-In Button -->
+            <div class="modal-tab-switch">
+                <button class="modal-tab-btn active" id="tabLoginBtn" onclick="toggleAuthMode('login')">Log In</button>
+                <button class="modal-tab-btn" id="tabRegisterBtn" onclick="toggleAuthMode('register')">Create Account</button>
+            </div>
+
+            <!-- Quick Google Sign-In -->
             <button class="btn-google" onclick="handleGoogleSignIn()">
                 <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-                Sign in with Google
+                Continue with Google
             </button>
 
-            <div class="divider"><span>OR CREATE PROFILE MANUAL</span></div>
+            <div class="divider"><span>OR</span></div>
 
-            <form onsubmit="handleRegistration(event)">
+            <!-- LOGIN FORM -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Your password" required>
+                </div>
+                <button type="submit" id="loginSubmitBtn" class="btn-cta" style="width: 100%; margin-top: 8px;">Log In to 4BF</button>
+            </form>
 
-                <!-- Profile Picture Selection -->
+            <!-- REGISTRATION FORM -->
+            <form id="registerForm" onsubmit="handleRegistration(event)" style="display: none;">
                 <div class="form-group">
                     <label>Profile Picture (Upload Photo)</label>
                     <div class="photo-preview-container">
@@ -476,9 +537,10 @@
                     </label>
                 </div>
 
-                <button type="submit" id="submitBtn" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Public Profile</button>
-                <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 6px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
+                <button type="submit" id="regSubmitBtn" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Public Profile</button>
             </form>
+
+            <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 10px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
         </div>
     </div>
 
@@ -487,9 +549,7 @@
         <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
     </footer>
 
-    <!-- Interactive & Firebase JavaScript Logic -->
     <script>
-        // Project credentials for bfs-75627
         const firebaseConfig = {
             apiKey: "AIzaSyChkzaXGlbOWno07H-cVLKVGCB4vXpjP6A",
             authDomain: "bfs-75627.firebaseapp.com",
@@ -500,14 +560,12 @@
             measurementId: "G-FQ75Q1PY9P"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         let base64PhotoStr = "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=600";
 
-        // Image Preview Handler & Compressor
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -515,7 +573,6 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        // Compress photo for fast database storage
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         const maxW = 400;
@@ -533,7 +590,6 @@
             }
         }
 
-        // Navigation tab switching
         function switchTab(tabName) {
             const allLinks = document.querySelectorAll('.nav-link');
             allLinks.forEach(link => link.classList.remove('active'));
@@ -552,19 +608,60 @@
             }
         }
 
-        // Modal Controls
-        function openModal(modalId) {
+        function openModal(modalId, initialMode = 'login') {
             document.getElementById(modalId).style.display = 'flex';
+            toggleAuthMode(initialMode);
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
 
-        // Handle Registration & Storing Data in Firestore
+        function toggleAuthMode(mode) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabLoginBtn = document.getElementById('tabLoginBtn');
+            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+
+            if (mode === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabLoginBtn.classList.add('active');
+                tabRegisterBtn.classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabRegisterBtn.classList.add('active');
+                tabLoginBtn.classList.remove('active');
+            }
+        }
+
+        // Login Handler
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const submitBtn = document.getElementById('loginSubmitBtn');
+
+            submitBtn.textContent = "Logging In...";
+            submitBtn.disabled = true;
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                alert("🎉 Welcome back to 4BF!");
+                closeModal('userModal');
+            } catch (error) {
+                alert("Login Error: " + error.message);
+            } finally {
+                submitBtn.textContent = "Log In to 4BF";
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Registration Handler
         async function handleRegistration(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
+            const submitBtn = document.getElementById('regSubmitBtn');
             submitBtn.textContent = "Saving Profile...";
             submitBtn.disabled = true;
 
@@ -588,17 +685,17 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert(`🎉 Account and public profile created for ${name}!`);
+                alert(`🎉 Account created! Welcome ${name}`);
                 closeModal('userModal');
             } catch (error) {
-                alert("Firebase Registration Error: " + error.message);
+                alert("Registration Error: " + error.message);
             } finally {
                 submitBtn.textContent = "Create Public Profile";
                 submitBtn.disabled = false;
             }
         }
 
-        // Handle Google Sign-In Popup
+        // Google Sign-In
         async function handleGoogleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
@@ -622,7 +719,7 @@
             }
         }
 
-        // Realtime Firestore Listener to Display Public Profiles
+        // Fetch Live Profiles
         function loadCommunityMembers() {
             db.collection("profiles").limit(10).onSnapshot((snapshot) => {
                 const container = document.getElementById('live-members-container');
@@ -651,13 +748,12 @@
             });
         }
 
-        // Send connection request to Firestore
         async function sendConnectionRequest(targetUserId, targetName) {
             const currentUser = auth.currentUser;
 
             if (!currentUser) {
-                alert("Please register or log in first to connect with other pet owners.");
-                openModal('userModal');
+                alert("Please log in or register first to connect with other pet owners.");
+                openModal('userModal', 'login');
                 return;
             }
 
@@ -671,23 +767,26 @@
 
                 alert(`🐾 Connection request sent to ${targetName}!`);
             } catch (error) {
-                alert("Firebase Connection Error: " + error.message);
+                alert("Error sending connection: " + error.message);
             }
         }
 
-        // Auth state listener
+        // Auth state listener updates top right UI dynamically
         auth.onAuthStateChanged((user) => {
-            const authBtn = document.getElementById('authBtn');
+            const authNavActions = document.getElementById('authNavActions');
             if (user) {
-                authBtn.textContent = "Logged In";
-                authBtn.onclick = () => alert(`Logged in as: ${user.email}`);
+                authNavActions.innerHTML = `
+                    <span style="font-size:0.88rem; font-weight:bold; color:var(--primary-teal);">Logged in as: ${user.email}</span>
+                    <button class="btn-login-nav" onclick="auth.signOut()">Log Out</button>
+                `;
             } else {
-                authBtn.textContent = "+ Join 4BF";
-                authBtn.onclick = () => openModal('userModal');
+                authNavActions.innerHTML = `
+                    <button class="btn-login-nav" onclick="openModal('userModal', 'login')">Log In</button>
+                    <button class="btn-cta" onclick="openModal('userModal', 'register')">+ Join 4BF</button>
+                `;
             }
         });
 
-        // Initialize Live Member Loading
         loadCommunityMembers();
     </script>
 </body>
