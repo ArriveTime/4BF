@@ -69,6 +69,46 @@
             cursor: pointer;
         }
 
+        .btn-google {
+            background-color: #ffffff;
+            color: #757575;
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .btn-google:hover { background-color: #f8f9fa; }
+
+        .divider {
+            text-align: center;
+            margin: 15px 0;
+            position: relative;
+        }
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 1px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        .divider span {
+            background: white;
+            padding: 0 10px;
+            position: relative;
+            z-index: 2;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
         /* Hero Header */
         .hero {
             background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
@@ -208,6 +248,22 @@
             cursor: pointer;
         }
 
+        /* Photo Upload Styling */
+        .photo-preview-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+        .photo-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-teal);
+            background: #eee;
+        }
+
         /* Modal Styling */
         .modal-overlay {
             display: none;
@@ -299,7 +355,7 @@
             </div>
         </div>
 
-        <h2 class="section-header">🐾 Explore Community Categories</h2>
+        <h2 class="section-header">🐾 Featured Community Listings</h2>
 
         <!-- SINGLE HORIZONTAL ROW OF CATEGORIES -->
         <div class="horizontal-categories-row" id="all-listings-container">
@@ -354,15 +410,39 @@
 
         </div>
 
+        <!-- NEW: LIVE COMMUNITY MEMBERS FROM FIRESTORE -->
+        <h2 class="section-header">⭐ Newly Joined 4BF Profiles</h2>
+        <div class="horizontal-categories-row" id="live-members-container">
+            <p style="color: #666; font-size: 0.9rem; padding: 10px;">Loading community profiles...</p>
+        </div>
+
     </div>
 
-    <!-- Registration & Login Modal -->
+    <!-- Registration & Profile Creation Modal -->
     <div class="modal-overlay" id="userModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Account</h2>
+            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
             <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community to connect with other owners.</p>
             
+            <!-- Quick Google Sign-In Button -->
+            <button class="btn-google" onclick="handleGoogleSignIn()">
+                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.617z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+                Sign in with Google
+            </button>
+
+            <div class="divider"><span>OR CREATE PROFILE MANUAL</span></div>
+
             <form onsubmit="handleRegistration(event)">
+
+                <!-- Profile Picture Selection -->
+                <div class="form-group">
+                    <label>Profile Picture (Upload Photo)</label>
+                    <div class="photo-preview-container">
+                        <img id="imgPreview" class="photo-preview" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=200" alt="Preview">
+                        <input type="file" id="regPhoto" class="form-control" accept="image/*" onchange="previewImage(event)">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>Email Address</label>
                     <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
@@ -378,16 +458,15 @@
                 <div class="form-group">
                     <label>Primary Goal on 4BF</label>
                     <select id="regGoal" class="form-control" required>
-                        <option value="">Select your goal...</option>
-                        <option value="dating">Dating Single Pet Lovers</option>
-                        <option value="playdates">Finding Local Playdates</option>
-                        <option value="care">Pet Care & Sitting Swaps</option>
-                        <option value="all">All of the Above</option>
+                        <option value="dating">❤️ Dating Single Pet Lovers</option>
+                        <option value="playdates">🐕 Finding Local Playdates</option>
+                        <option value="care">🤝 Pet Care & Sitting Swaps</option>
+                        <option value="all">🐾 All of the Above</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Pet Details (Type, Breed, Temperament)</label>
-                    <input type="text" id="regDetails" class="form-control" placeholder="e.g., Dog - Golden Retriever - Friendly/Vaccinated" required>
+                    <label>Public Bio / Pet Details</label>
+                    <textarea id="regDetails" class="form-control" rows="3" placeholder="Tell the community about you and your pet..." required></textarea>
                 </div>
 
                 <div class="form-group" style="margin-top: 12px;">
@@ -397,7 +476,7 @@
                     </label>
                 </div>
 
-                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Profile & Save to Firebase</button>
+                <button type="submit" id="submitBtn" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Public Profile</button>
                 <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 6px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
             </form>
         </div>
@@ -426,13 +505,40 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        let base64PhotoStr = "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=600";
+
+        // Image Preview Handler & Compressor
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Compress photo for fast database storage
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxW = 400;
+                        const scale = maxW / img.width;
+                        canvas.width = maxW;
+                        canvas.height = img.height * scale;
+
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        base64PhotoStr = canvas.toDataURL('image/jpeg', 0.7);
+                        document.getElementById('imgPreview').src = base64PhotoStr;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         // Navigation tab switching
         function switchTab(tabName) {
             const allLinks = document.querySelectorAll('.nav-link');
             allLinks.forEach(link => link.classList.remove('active'));
 
             const cards = document.querySelectorAll('.category-item-card');
-            
             if (tabName === 'all') {
                 cards.forEach(card => card.style.display = 'flex');
             } else {
@@ -458,7 +564,10 @@
         // Handle Registration & Storing Data in Firestore
         async function handleRegistration(e) {
             e.preventDefault();
-            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = "Saving Profile...";
+            submitBtn.disabled = true;
+
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
             const name = document.getElementById('regName').value;
@@ -466,25 +575,80 @@
             const details = document.getElementById('regDetails').value;
 
             try {
-                // 1. Create User in Firebase Auth
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
 
-                // 2. Save profile in Firestore collection 'profiles'
                 await db.collection("profiles").doc(user.uid).set({
                     userId: user.uid,
                     displayName: name,
                     email: email,
                     goal: goal,
                     petDetails: details,
+                    photoUrl: base64PhotoStr,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert(`🎉 Account created for ${name}! Data saved in your Firebase project bfs-75627.`);
+                alert(`🎉 Account and public profile created for ${name}!`);
                 closeModal('userModal');
             } catch (error) {
                 alert("Firebase Registration Error: " + error.message);
+            } finally {
+                submitBtn.textContent = "Create Public Profile";
+                submitBtn.disabled = false;
             }
+        }
+
+        // Handle Google Sign-In Popup
+        async function handleGoogleSignIn() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+
+                await db.collection("profiles").doc(user.uid).set({
+                    userId: user.uid,
+                    displayName: user.displayName || "4BF Member",
+                    email: user.email,
+                    goal: "all",
+                    petDetails: "Registered via Google Sign-In",
+                    photoUrl: user.photoURL || base64PhotoStr,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                alert(`🎉 Welcome back, ${user.displayName || user.email}!`);
+                closeModal('userModal');
+            } catch (error) {
+                alert("Google Sign-In Error: " + error.message);
+            }
+        }
+
+        // Realtime Firestore Listener to Display Public Profiles
+        function loadCommunityMembers() {
+            db.collection("profiles").limit(10).onSnapshot((snapshot) => {
+                const container = document.getElementById('live-members-container');
+                if (snapshot.empty) {
+                    container.innerHTML = `<p style="color: #888; padding: 10px;">Be the first to join and create a public profile!</p>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const profile = doc.data();
+                    const cardHtml = `
+                        <div class="category-item-card cat-${profile.goal || 'all'}">
+                            <div class="category-header-title">🐾 Member Profile</div>
+                            <img src="${profile.photoUrl || base64PhotoStr}" class="profile-img" alt="${profile.displayName}">
+                            <div class="profile-body">
+                                <div class="profile-badge">${profile.goal || 'Community Member'}</div>
+                                <h3 class="profile-title">${profile.displayName}</h3>
+                                <p class="profile-desc">${profile.petDetails}</p>
+                                <button class="btn-connect" onclick="sendConnectionRequest('${profile.userId}', '${profile.displayName}')">Connect 🐾</button>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += cardHtml;
+                });
+            });
         }
 
         // Send connection request to Firestore
@@ -522,6 +686,9 @@
                 authBtn.onclick = () => openModal('userModal');
             }
         });
+
+        // Initialize Live Member Loading
+        loadCommunityMembers();
     </script>
 </body>
 </html>
