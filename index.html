@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4BF.com - For Best Friends | Dating, Playdates & Pet Community</title>
+
+    <!-- Firebase Compatibility SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-teal: #008080;
@@ -120,7 +126,7 @@
         .category-card p { font-size: 0.78rem; color: #666; }
         .icon-box { font-size: 1.6rem; margin-bottom: 4px; }
 
-        /* HORIZONTAL CATEGORIES ROW (Side-by-Side Left to Right) */
+        /* HORIZONTAL CATEGORIES ROW */
         .section-header {
             font-size: 1.3rem;
             margin-bottom: 18px;
@@ -233,17 +239,6 @@
             border-radius: 6px;
         }
 
-        .legal-text {
-            font-size: 0.82rem;
-            color: #555;
-            line-height: 1.5;
-            background: var(--bg-light);
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 14px;
-        }
-
         /* Footer */
         footer {
             background: var(--text-dark);
@@ -253,7 +248,6 @@
             margin-top: auto;
             font-size: 0.82rem;
         }
-        footer a { color: var(--accent-orange); text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -268,7 +262,7 @@
             <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
             <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
         </ul>
-        <button class="btn-cta" onclick="openModal('userModal')">+ Join 4BF</button>
+        <button class="btn-cta" id="authBtn" onclick="openModal('userModal')">+ Join 4BF</button>
     </nav>
 
     <!-- Hero Header -->
@@ -307,7 +301,7 @@
 
         <h2 class="section-header">🐾 Explore Community Categories</h2>
 
-        <!-- SINGLE HORIZONTAL ROW OF CATEGORIES (Side-by-side Left to Right) -->
+        <!-- SINGLE HORIZONTAL ROW OF CATEGORIES -->
         <div class="horizontal-categories-row" id="all-listings-container">
             
             <!-- Category 1: Singles/Dating -->
@@ -318,7 +312,7 @@
                     <div class="profile-badge">Single • Dog Owner</div>
                     <h3 class="profile-title">Sarah & Barnaby</h3>
                     <p class="profile-desc">Weekend hiker, coffee enthusiast, and Barnaby's full-time treat dispenser. Looking for outdoor adventures.</p>
-                    <button class="btn-connect" onclick="alert('Connect feature active!')">Send Hello 🐾</button>
+                    <button class="btn-connect" onclick="sendConnectionRequest('user_sarah_101', 'Sarah & Barnaby')">Send Hello 🐾</button>
                 </div>
             </div>
 
@@ -330,7 +324,7 @@
                     <div class="profile-badge">Playdate Group • Active</div>
                     <h3 class="profile-title">Saturday Dog Park Meetup</h3>
                     <p class="profile-desc">Energetic dogs welcome! We meet every Saturday at 9:00 AM at Central Bark Dog Park for casual coffee and play.</p>
-                    <button class="btn-connect" onclick="alert('Joined group!')">Join Group</button>
+                    <button class="btn-connect" onclick="sendConnectionRequest('group_park_202', 'Saturday Dog Park Group')">Join Group</button>
                 </div>
             </div>
 
@@ -342,7 +336,7 @@
                     <div class="profile-badge">Sitting Swap • Verified</div>
                     <h3 class="profile-title">Downtown Cat Sitting Co-Op</h3>
                     <p class="profile-desc">Trade cat-feeding duties with verified neighbors when traveling. Free reciprocal sitter network.</p>
-                    <button class="btn-connect" onclick="alert('Request sent!')">Join Swap Network</button>
+                    <button class="btn-connect" onclick="sendConnectionRequest('coop_cat_303', 'Downtown Cat Sitting Co-Op')">Join Swap Network</button>
                 </div>
             </div>
 
@@ -362,13 +356,21 @@
 
     </div>
 
-    <!-- Registration Modal -->
+    <!-- Registration & Login Modal -->
     <div class="modal-overlay" id="userModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
-            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community for dating, playdates, or care swaps.</p>
+            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Account</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community to connect with other owners.</p>
             
             <form onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Choose a secure password" required>
+                </div>
                 <div class="form-group">
                     <label>Your Name & Pet's Name</label>
                     <input type="text" id="regName" class="form-control" placeholder="e.g., Alex & Buster" required>
@@ -391,37 +393,40 @@
                 <div class="form-group" style="margin-top: 12px;">
                     <label style="font-weight: normal; font-size: 0.82rem; display: flex; gap: 8px; align-items: flex-start;">
                         <input type="checkbox" required style="margin-top: 2px;">
-                        <span>I confirm my pet is non-aggressive and up-to-date on vaccinations. I agree to exercise due diligence during meetups and accept the <a onclick="openModal('legalModal')" style="color: var(--accent-orange); cursor: pointer;">Terms of Service & Liability Waiver</a>.</span>
+                        <span>I confirm my pet is non-aggressive and up-to-date on vaccinations.</span>
                     </label>
                 </div>
 
-                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Profile</button>
+                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Profile & Save to Firebase</button>
                 <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 6px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
             </form>
-        </div>
-    </div>
-
-    <!-- Legal Disclaimer Modal -->
-    <div class="modal-overlay" id="legalModal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 12px; color: var(--primary-teal);">Legal Disclaimer & Safety Policy</h2>
-            <div class="legal-text">
-                <p><strong>1. Assumption of Risk:</strong> Online interactions and real-world meetups carry inherent risks. Exercise caution and due diligence.</p><br>
-                <p><strong>2. Hold Harmless:</strong> You agree to hold harmless 4BF.com and its operators from any claims, injuries, or disputes.</p><br>
-                <p><strong>3. Pet Responsibility:</strong> Owners are solely responsible for pet behavior. Do not bring aggressive animals to meetups.</p>
-            </div>
-            <button type="button" class="btn-cta" onclick="closeModal('legalModal')" style="width: 100%;">I Understand & Agree</button>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
-        <p style="margin-top: 8px;"><a onclick="openModal('legalModal')">Terms & Legal Disclaimer</a> | <a onclick="openModal('legalModal')">Safety Guidelines</a></p>
     </footer>
 
-    <!-- Interactive JavaScript -->
+    <!-- Interactive & Firebase JavaScript Logic -->
     <script>
+        // Project credentials for bfs-75627
+        const firebaseConfig = {
+            apiKey: "AIzaSyChkzaXGlbOWno07H-cVLKVGCB4vXpjP6A",
+            authDomain: "bfs-75627.firebaseapp.com",
+            projectId: "bfs-75627",
+            storageBucket: "bfs-75627.firebasestorage.app",
+            messagingSenderId: "1029971862111",
+            appId: "1:1029971862111:web:0fb04afe1f09292ed6b1ea",
+            measurementId: "G-FQ75Q1PY9P"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Navigation tab switching
         function switchTab(tabName) {
             const allLinks = document.querySelectorAll('.nav-link');
             allLinks.forEach(link => link.classList.remove('active'));
@@ -441,6 +446,7 @@
             }
         }
 
+        // Modal Controls
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
         }
@@ -449,12 +455,73 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        function handleRegistration(e) {
+        // Handle Registration & Storing Data in Firestore
+        async function handleRegistration(e) {
             e.preventDefault();
+            
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
             const name = document.getElementById('regName').value;
-            alert(`🎉 Profile created for ${name}! Welcome to 4BF.com.`);
-            closeModal('userModal');
+            const goal = document.getElementById('regGoal').value;
+            const details = document.getElementById('regDetails').value;
+
+            try {
+                // 1. Create User in Firebase Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // 2. Save profile in Firestore collection 'profiles'
+                await db.collection("profiles").doc(user.uid).set({
+                    userId: user.uid,
+                    displayName: name,
+                    email: email,
+                    goal: goal,
+                    petDetails: details,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(`🎉 Account created for ${name}! Data saved in your Firebase project bfs-75627.`);
+                closeModal('userModal');
+            } catch (error) {
+                alert("Firebase Registration Error: " + error.message);
+            }
         }
+
+        // Send connection request to Firestore
+        async function sendConnectionRequest(targetUserId, targetName) {
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                alert("Please register or log in first to connect with other pet owners.");
+                openModal('userModal');
+                return;
+            }
+
+            try {
+                await db.collection("connections").add({
+                    fromUserId: currentUser.uid,
+                    toUserId: targetUserId,
+                    status: "pending",
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(`🐾 Connection request sent to ${targetName}!`);
+            } catch (error) {
+                alert("Firebase Connection Error: " + error.message);
+            }
+        }
+
+        // Auth state listener
+        auth.onAuthStateChanged((user) => {
+            const authBtn = document.getElementById('authBtn');
+            if (user) {
+                authBtn.textContent = "Logged In";
+                authBtn.onclick = () => alert(`Logged in as: ${user.email}`);
+            } else {
+                authBtn.textContent = "+ Join 4BF";
+                authBtn.onclick = () => openModal('userModal');
+            }
+        });
     </script>
 </body>
 </html>
