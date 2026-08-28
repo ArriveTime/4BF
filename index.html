@@ -83,7 +83,7 @@
             flex: 1;
         }
 
-        /* Horizontal Category Layout */
+        /* Horizontal Category Row */
         .category-grid {
             display: flex;
             flex-direction: row;
@@ -165,7 +165,7 @@
             cursor: pointer;
         }
 
-        /* Modal Popup for Profile Creation */
+        /* Modal Popup Styling */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -180,8 +180,10 @@
             background: white;
             padding: 30px;
             border-radius: 12px;
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
@@ -194,6 +196,17 @@
             border-radius: 6px;
         }
 
+        .legal-text {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.5;
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
         /* Footer */
         footer {
             background: var(--text-dark);
@@ -203,7 +216,7 @@
             margin-top: auto;
             font-size: 0.85rem;
         }
-        footer a { color: var(--accent-orange); text-decoration: none; }
+        footer a { color: var(--accent-orange); text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -218,7 +231,7 @@
             <li><span class="nav-link" onclick="switchTab('care')">Community Care</span></li>
             <li><span class="nav-link" onclick="switchTab('directory')">Directory</span></li>
         </ul>
-        <button class="btn-cta" onclick="openModal()">+ Join 4BF</button>
+        <button class="btn-cta" onclick="openModal('userModal')">+ Join 4BF</button>
     </nav>
 
     <!-- Hero Header -->
@@ -332,7 +345,7 @@
 
     </div>
 
-    <!-- Onboarding / Registration Modal -->
+    <!-- Registration Modal -->
     <div class="modal-overlay" id="userModal">
         <div class="modal-content">
             <h2 style="margin-bottom: 10px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
@@ -354,19 +367,49 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Pet Details (Type, Breed, Energy Level)</label>
-                    <input type="text" class="form-control" placeholder="e.g., Dog - Golden Retriever - High Energy" required>
+                    <label>Pet Details (Type, Breed, Temperament)</label>
+                    <input type="text" class="form-control" placeholder="e.g., Dog - Golden Retriever - Friendly/Vaccinated" required>
                 </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label style="font-weight: normal; font-size: 0.85rem; display: flex; gap: 8px; align-items: flex-start;">
+                        <input type="checkbox" required style="margin-top: 3px;">
+                        <span>I confirm my pet is non-aggressive and up-to-date on vaccinations. I agree to exercise due diligence during meetups and accept the <a onclick="openModal('legalModal')" style="color: var(--accent-orange); cursor: pointer;">Terms of Service & Liability Waiver</a>.</span>
+                    </label>
+                </div>
+
                 <button type="submit" class="btn-cta" style="width: 100%; margin-top: 10px;">Create Profile</button>
-                <button type="button" onclick="closeModal()" style="width: 100%; margin-top: 8px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
+                <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 8px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Safety & Legal Disclaimer Modal -->
+    <div class="modal-overlay" id="legalModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 15px; color: var(--primary-teal);">Legal Disclaimer & Safety Policy</h2>
+            
+            <div class="legal-text">
+                <p><strong>1. Assumption of Risk:</strong> By using 4BF.com, you acknowledge and agree that online interactions and real-world meetups carry inherent risks. You agree to exercise care, caution, and independent due diligence when communicating with or meeting other users and their pets.</p>
+                <br>
+                <p><strong>2. Hold Harmless & Release of Liability:</strong> You explicitly agree to release, indemnify, and hold harmless 4BF.com, its creator, operators, developers, and affiliates from any and all claims, liabilities, injuries, damages, losses, or disputes arising out of or related to your use of the website or participation in any meetups, playdates, dating activities, or pet care exchanges.</p>
+                <br>
+                <p><strong>3. Animal Responsibility & Safety:</strong> 4BF.com does not evaluate, screen, or verify the temperament, medical history, or training of any pets on this platform. Owners are solely responsible and legally liable for the behavior, control, and actions of their pets. Do not bring aggressive or unvaccinated animals to any community events or meetups.</p>
+                <br>
+                <p><strong>4. No Background Checks:</strong> 4BF.com does not conduct criminal background checks, identity verification, or pet behavior assessments. Always meet in well-lit, public spaces for initial introductions.</p>
+            </div>
+
+            <button type="button" class="btn-cta" onclick="closeModal('legalModal')" style="width: 100%;">I Understand & Agree</button>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
-        <p style="margin-top: 6px;"><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Safety & Guidelines</a></p>
+        <p style="margin-top: 8px; font-size: 0.8rem; color: #ccc; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+            <strong>Disclaimer:</strong> 4BF.com is a platform for community connections. Users assume all risk regarding personal safety and pet interactions. The site creator and operators accept no liability for interactions, injuries, or pet behavior resulting from connections made on this website. Always practice due diligence.
+        </p>
+        <p style="margin-top: 10px;"><a onclick="openModal('legalModal')">Terms & Legal Disclaimer</a> | <a onclick="openModal('legalModal')">Safety Guidelines</a></p>
     </footer>
 
     <!-- Interactive JavaScript -->
@@ -388,18 +431,18 @@
             }
         }
 
-        function openModal() {
-            document.getElementById('userModal').style.display = 'flex';
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('userModal').style.display = 'none';
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
         function handleRegistration(e) {
             e.preventDefault();
             alert('🎉 Profile created successfully! Welcome to 4BF.com');
-            closeModal();
+            closeModal('userModal');
         }
     </script>
 </body>
