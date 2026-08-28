@@ -68,116 +68,124 @@
             background: linear-gradient(135deg, rgba(0,128,128,0.9), rgba(255,127,80,0.85)), url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1600') center/cover;
             color: white;
             text-align: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
         }
 
-        .hero h1 { font-size: 2.5rem; margin-bottom: 12px; }
-        .hero p { font-size: 1.1rem; max-width: 650px; margin: 0 auto 25px; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.05rem; max-width: 650px; margin: 0 auto 20px; }
 
         /* Main Container */
         .main-container {
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 25px auto;
             padding: 0 20px;
             width: 100%;
             flex: 1;
         }
 
-        /* Horizontal Category Hubs Row */
+        /* Compact Horizontal Category Hubs Row */
         .category-grid {
             display: flex;
             flex-direction: row;
-            gap: 20px;
+            justify-content: center;
+            align-items: stretch;
+            gap: 15px;
             margin-bottom: 35px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+            flex-wrap: wrap;
             width: 100%;
         }
 
         .category-card {
             flex: 1;
-            min-width: 220px;
+            min-width: 200px;
+            max-width: 250px;
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 22px 18px;
+            border-radius: 10px;
+            padding: 16px 14px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-top: 5px solid var(--primary-teal);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--primary-teal);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .category-card:hover { transform: translateY(-4px); }
+        .category-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .category-card.dating { border-top-color: #e74c3c; }
         .category-card.playdates { border-top-color: var(--accent-orange); }
         .category-card.care { border-top-color: #27ae60; }
         .category-card.directory { border-top-color: #8e44ad; }
 
-        .icon-box { font-size: 2.2rem; margin-bottom: 10px; }
+        .category-card h3 { font-size: 1rem; margin-bottom: 6px; }
+        .category-card p { font-size: 0.82rem; color: #666; line-height: 1.3; }
+
+        .icon-box { font-size: 1.8rem; margin-bottom: 6px; }
 
         /* Profile & Listing Horizontal Grid */
-        .tab-content { display: none; width: 100%; margin-bottom: 40px; }
+        .tab-content { display: none; width: 100%; margin-bottom: 35px; }
         .tab-content.active { display: block; }
 
         .section-header {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 18px;
             color: var(--primary-teal);
             border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .listings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
+            gap: 20px;
             width: 100%;
         }
 
         .profile-card {
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
         }
 
+        /* Fixed Image Aspect Ratio to Prevent Stretching/Blurring */
         .profile-img {
-            height: 200px;
+            height: 220px;
             width: 100%;
             object-fit: cover;
+            object-position: center;
+            display: block;
         }
 
         .profile-body {
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
 
-        .profile-title { font-size: 1.2rem; margin-bottom: 6px; color: var(--text-dark); }
+        .profile-title { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-dark); }
         .profile-badge {
             display: inline-block;
             align-self: flex-start;
             background: var(--bg-light);
             color: var(--primary-teal);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .profile-desc { font-size: 0.9rem; color: #555; line-height: 1.4; margin-bottom: 15px; flex: 1; }
+        .profile-desc { font-size: 0.88rem; color: #555; line-height: 1.4; margin-bottom: 14px; flex: 1; }
 
         .btn-connect {
             width: 100%;
             background: var(--primary-teal);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 9px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
@@ -196,33 +204,33 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 550px;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 500px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 0.88rem; }
         .form-control {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
         }
 
         .legal-text {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #555;
             line-height: 1.5;
             background: var(--bg-light);
-            padding: 15px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
         /* Footer */
@@ -230,9 +238,9 @@
             background: var(--text-dark);
             color: white;
             text-align: center;
-            padding: 25px 20px;
+            padding: 20px;
             margin-top: auto;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
         footer a { color: var(--accent-orange); text-decoration: none; cursor: pointer; }
     </style>
@@ -260,7 +268,7 @@
 
     <div class="main-container">
 
-        <!-- Horizontal Category Cards Row -->
+        <!-- Compact Horizontal Category Cards Row -->
         <div class="category-grid">
             <div class="category-card dating" onclick="switchTab('dating')">
                 <div class="icon-box">❤️</div>
@@ -362,8 +370,8 @@
     <!-- Registration Modal -->
     <div class="modal-overlay" id="userModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 10px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
-            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">Join your local pet community for dating, playdates, or care swaps.</p>
+            <h2 style="margin-bottom: 8px; color: var(--primary-teal);">Create Your 4BF Profile</h2>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 16px;">Join your local pet community for dating, playdates, or care swaps.</p>
             
             <form onsubmit="handleRegistration(event)">
                 <div class="form-group">
@@ -385,15 +393,15 @@
                     <input type="text" id="regDetails" class="form-control" placeholder="e.g., Dog - Golden Retriever - Friendly/Vaccinated" required>
                 </div>
 
-                <div class="form-group" style="margin-top: 15px;">
-                    <label style="font-weight: normal; font-size: 0.85rem; display: flex; gap: 8px; align-items: flex-start;">
-                        <input type="checkbox" required style="margin-top: 3px;">
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-weight: normal; font-size: 0.82rem; display: flex; gap: 8px; align-items: flex-start;">
+                        <input type="checkbox" required style="margin-top: 2px;">
                         <span>I confirm my pet is non-aggressive and up-to-date on vaccinations. I agree to exercise due diligence during meetups and accept the <a onclick="openModal('legalModal')" style="color: var(--accent-orange); cursor: pointer;">Terms of Service & Liability Waiver</a>.</span>
                     </label>
                 </div>
 
-                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 10px;">Create Profile</button>
-                <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 8px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
+                <button type="submit" class="btn-cta" style="width: 100%; margin-top: 8px;">Create Profile</button>
+                <button type="button" onclick="closeModal('userModal')" style="width: 100%; margin-top: 6px; background: none; border: none; cursor: pointer; color: #888;">Cancel</button>
             </form>
         </div>
     </div>
@@ -401,7 +409,7 @@
     <!-- Safety & Legal Disclaimer Modal -->
     <div class="modal-overlay" id="legalModal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 15px; color: var(--primary-teal);">Legal Disclaimer & Safety Policy</h2>
+            <h2 style="margin-bottom: 12px; color: var(--primary-teal);">Legal Disclaimer & Safety Policy</h2>
             
             <div class="legal-text">
                 <p><strong>1. Assumption of Risk:</strong> By using 4BF.com, you acknowledge and agree that online interactions and real-world meetups carry inherent risks. You agree to exercise care, caution, and independent due diligence when communicating with or meeting other users and their pets.</p>
@@ -420,10 +428,10 @@
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 4BF.com - For Best Friends | All Rights Reserved</p>
-        <p style="margin-top: 8px; font-size: 0.8rem; color: #ccc; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+        <p style="margin-top: 6px; font-size: 0.78rem; color: #ccc; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.4;">
             <strong>Disclaimer:</strong> 4BF.com is a platform for community connections. Users assume all risk regarding personal safety and pet interactions. The site creator and operators accept no liability for interactions, injuries, or pet behavior resulting from connections made on this website. Always practice due diligence.
         </p>
-        <p style="margin-top: 10px;"><a onclick="openModal('legalModal')">Terms & Legal Disclaimer</a> | <a onclick="openModal('legalModal')">Safety Guidelines</a></p>
+        <p style="margin-top: 8px;"><a onclick="openModal('legalModal')">Terms & Legal Disclaimer</a> | <a onclick="openModal('legalModal')">Safety Guidelines</a></p>
     </footer>
 
     <!-- Interactive JavaScript -->
@@ -456,8 +464,6 @@
         function handleRegistration(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
-            const details = document.getElementById('regDetails').value;
-            
             alert(`🎉 Profile created for ${name}! Welcome to 4BF.com.`);
             closeModal('userModal');
         }
