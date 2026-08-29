@@ -78,6 +78,11 @@
             transition: all 0.2s ease;
         }
 
+        /* Owner Mode Button Hidden by Default for Public */
+        #ownerToggleBtn {
+            display: none;
+        }
+
         .nav-buttons .btn:hover {
             background: #f0f4f8;
         }
@@ -797,6 +802,13 @@
         let selectedPhotoBase64 = "";
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Check if URL parameter '?admin=true' exists to display Owner button
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('admin') === 'true') {
+                const ownerBtn = document.getElementById('ownerToggleBtn');
+                if (ownerBtn) ownerBtn.style.display = 'inline-block';
+            }
+
             loadLiveProfiles();
         });
 
@@ -830,7 +842,7 @@
 
             // Filter banned profiles for general public, but show all to Owner with a banner
             const profilesToDisplay = storedProfiles.filter(p => {
-                if (isOwnerMode) return true; // Owner sees all, including banned/blocked
+                if (isOwnerMode) return true;
                 return !blockedUsers.includes(p.id) && !p.isBanned;
             });
 
