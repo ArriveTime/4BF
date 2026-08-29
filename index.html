@@ -67,7 +67,7 @@
 
         .nav-buttons .btn {
             padding: 10px 20px;
-            margin-left: 10px;
+            margin-left: 8px;
             border-radius: 30px;
             border: 1px solid var(--primary);
             background: transparent;
@@ -93,6 +93,12 @@
             border-color: var(--accent-hover);
         }
 
+        .nav-buttons .btn-owner-badge {
+            background: #1e293b;
+            color: #fbbf24;
+            border-color: #fbbf24;
+        }
+
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #1e4267 0%, #2b5c8f 50%, #3d7ab8 100%);
@@ -114,7 +120,6 @@
             line-height: 1.2;
         }
 
-        /* Dynamic 3-Line Highlight Cards */
         .hero-highlights {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -196,7 +201,7 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Global Layout Container */
+        /* Layout Container */
         .section-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -219,7 +224,6 @@
             font-size: 1.05rem;
         }
 
-        /* Feature Highlights Grid */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -258,44 +262,6 @@
             color: var(--text-muted);
         }
 
-        /* Activity Showcase Pills */
-        .activities-showcase {
-            background: var(--card-bg);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .activity-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 24px;
-        }
-
-        .activity-pill {
-            background: #eef4fa;
-            color: var(--primary-dark);
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #d0e1f3;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .activity-pill:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
         /* Profile Cards Grid */
         .grid-container {
             display: grid;
@@ -312,6 +278,7 @@
             display: flex;
             flex-direction: column;
             transition: transform 0.2s ease;
+            position: relative;
         }
 
         .category-item-card:hover {
@@ -371,6 +338,48 @@
 
         .btn-connect:hover {
             background: var(--primary-dark);
+        }
+
+        /* Owner Direct Action Toolbar on Cards */
+        .owner-card-toolbar {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 10px;
+            font-size: 0.8rem;
+            border-top: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .owner-card-toolbar span {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .owner-btn-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-owner-action {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-owner-ban {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-owner-delete {
+            background: #ef4444;
+            color: white;
         }
 
         /* Modal Styles */
@@ -476,7 +485,7 @@
             display: none;
         }
 
-        /* Admin Table Styles */
+        /* Analytics & Moderation Tables */
         .analytics-table {
             width: 100%;
             border-collapse: collapse;
@@ -509,7 +518,7 @@
             font-weight: bold;
         }
 
-        /* Footer & Legal Styling */
+        /* Footer */
         footer {
             background: var(--primary-dark);
             color: rgba(255,255,255,0.8);
@@ -564,19 +573,20 @@
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
+    <!-- Header Navigation -->
     <header>
         <div class="brand-container">
             <h1>4BF.com</h1>
             <div class="tagline-head">From best friends to boyfriends we have you covered</div>
         </div>
         <div class="nav-buttons">
+            <button class="btn" id="ownerToggleBtn" onclick="toggleOwnerMode()">👑 Owner Mode</button>
             <button class="btn" onclick="openModal('userModal', 'login')">Log In</button>
             <button class="btn btn-primary" onclick="openModal('userModal', 'register')">Create Profile</button>
         </div>
     </header>
 
-    <!-- Dynamic Hero Banner with 3 Separated Lines -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
             <h2>From best friends to boyfriends, we have you covered.</h2>
@@ -603,7 +613,7 @@
         </div>
     </section>
 
-    <!-- What You Can Do Section -->
+    <!-- Features Overview -->
     <section class="section-container">
         <div class="section-header">
             <h2>How It Works</h2>
@@ -633,52 +643,33 @@
         </div>
     </section>
 
-    <!-- Popular No-Cost Activities Section -->
-    <section class="section-container" style="padding-top: 0;">
-        <div class="activities-showcase">
-            <div class="section-header" style="margin-bottom: 20px;">
-                <h2>Popular Date Styles</h2>
-                <p>Select an activity style when setting up your profile</p>
-            </div>
-            <div class="activity-pills">
-                <div class="activity-pill" onclick="openModal('userModal', 'register')">🐾 Dog Walk Date</div>
-                <div class="activity-pill" onclick="openModal('userModal', 'register')">👥 Meet with Friends</div>
-                <div class="activity-pill" onclick="openModal('userModal', 'register')">🚴‍♂️ Bike Ride Dates</div>
-                <div class="activity-pill" onclick="openModal('userModal', 'register')">🌳 Meet in the Park</div>
-                <div class="activity-pill" onclick="openModal('userModal', 'register')">🧺 Picnic Dates</div>
-                <div class="activity-pill" onclick="openModal('userModal', 'register')">🏃‍♂️ Running & Gym Dates</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Community Profiles Showcase Section -->
+    <!-- Active Members Section -->
     <section id="community-section" class="section-container">
         <div class="section-header">
             <h2>Recent Members & Local Meetups</h2>
             <p>See who is active and looking for casual activity dates nearby</p>
         </div>
         <div id="live-members-container" class="grid-container">
-            <!-- Dynamically populates or displays starter profiles -->
+            <!-- Dynamically populates profiles -->
         </div>
     </section>
 
-    <!-- Footer & Legal Disclaimer -->
+    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <p style="font-weight: bold; color: #ffffff;">&copy; 4BF.com - All Rights Reserved.</p>
             <div class="disclaimer-text">
-                <strong>LEGAL & PRIVACY DISCLAIMER:</strong> 4BF.com is an open social networking and event-coordination venue designed to facilitate casual activity meetups, outdoor recreation, and social introductions. 4BF.com does not perform background checks, identity verification, or screening on any platform users. Members are solely responsible for exercising standard personal safety precautions when arranging or attending any meetups. 4BF.com welcomes individuals of all backgrounds without discrimination. By accessing or using this website, you agree to our Terms of Service and Privacy Policy.
+                <strong>LEGAL & PRIVACY DISCLAIMER:</strong> 4BF.com is an open social networking venue designed to facilitate casual activity meetups, outdoor recreation, and social introductions. 4BF.com does not perform background checks or screening on users. Members are solely responsible for exercising personal safety precautions.
             </div>
             <div class="footer-links">
-                <a href="#" onclick="alert('Terms of Service: Always practice personal safety when meeting new friends in public places.')">Terms of Service</a>
-                <a href="#" onclick="alert('Privacy Policy: Your personal information is kept secure and never sold.')">Privacy Policy</a>
-                <a href="#" onclick="alert('Community Guidelines: Be respectful, kind, and open-minded to all members.')">Community Standards</a>
-                <a class="admin-link" onclick="openModal('adminModal')">Admin Portal</a>
+                <a href="#" onclick="alert('Terms of Service: Always practice personal safety when meeting new friends.')">Terms of Service</a>
+                <a href="#" onclick="alert('Privacy Policy: Your personal information is kept secure.')">Privacy Policy</a>
+                <a class="admin-link" onclick="openModal('adminModal')">Owner & Admin Dashboard</a>
             </div>
         </div>
     </footer>
 
-    <!-- Auth & Profile Creation Modal -->
+    <!-- User Auth & Registration Modal -->
     <div id="userModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
@@ -701,7 +692,7 @@
                 <button type="submit" class="btn-connect" style="margin-top: 10px;">Log In</button>
             </form>
 
-            <!-- Profile Creation Form -->
+            <!-- Profile Form -->
             <form id="registerForm" style="display: none;" onsubmit="handleRegistration(event)">
                 <div class="form-group">
                     <label>Your Name & Pet's Name</label>
@@ -719,14 +710,12 @@
                     <label>Preferred Date Category</label>
                     <select id="regGoal" required>
                         <option value="" disabled selected>Select an activity style...</option>
-                        <optgroup label="No Cost Dates">
-                            <option value="Dog Walk Date">Dog Walk Date</option>
-                            <option value="Meet with Friends">Meet with Friends</option>
-                            <option value="Bike Ride Dates">Bike Ride Dates</option>
-                            <option value="Meet in the Park">Meet in the Park</option>
-                            <option value="Picnic Dates">Picnic Dates</option>
-                            <option value="Running or Exercise Dates at the Gym">Running or Exercise Dates at the Gym</option>
-                        </optgroup>
+                        <option value="Dog Walk Date">Dog Walk Date</option>
+                        <option value="Meet with Friends">Meet with Friends</option>
+                        <option value="Bike Ride Dates">Bike Ride Dates</option>
+                        <option value="Meet in the Park">Meet in the Park</option>
+                        <option value="Picnic Dates">Picnic Dates</option>
+                        <option value="Running or Exercise Dates at the Gym">Running or Exercise Dates at the Gym</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -736,42 +725,40 @@
                 </div>
                 <div class="form-group">
                     <label>Public Bio / About You</label>
-                    <textarea id="regDetails" placeholder="Tell members about yourself and what activity dates you enjoy..." required></textarea>
+                    <textarea id="regDetails" placeholder="Tell members about yourself..." required></textarea>
                 </div>
-                <button type="submit" id="regSubmitBtn" class="btn-connect" style="margin-top: 10px;">Create Public Profile</button>
+                <button type="submit" class="btn-connect" style="margin-top: 10px;">Create Public Profile</button>
             </form>
         </div>
     </div>
 
-    <!-- Hidden Admin Portal Modal -->
+    <!-- Admin & Owner Dashboard Modal -->
     <div id="adminModal" class="modal">
         <div class="modal-content modal-large">
             <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
             
-            <!-- Login View -->
             <div id="adminAuthView">
-                <h2 style="color: var(--primary-dark); margin-bottom: 8px; text-align: center;">Admin Security Portal</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Authorized access only. Enter administrative key.</p>
+                <h2 style="color: var(--primary-dark); margin-bottom: 8px; text-align: center;">Owner & Admin Portal</h2>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Enter owner key to access administrative controls.</p>
                 <form onsubmit="verifyAdminPass(event)">
                     <div class="form-group">
                         <label>Admin Password</label>
                         <input type="password" id="adminPassInput" placeholder="Enter password..." required>
                     </div>
-                    <button type="submit" class="btn-connect" style="margin-top: 10px;">Access Analytics Dashboard</button>
+                    <button type="submit" class="btn-connect" style="margin-top: 10px;">Access Admin Controls</button>
                 </form>
             </div>
 
-            <!-- Dashboard View -->
             <div id="adminDashboardView" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
-                    <h2 style="color: var(--primary-dark); font-size: 1.4rem;">📊 Real-Time Visitor Counter & Logs</h2>
-                    <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="closeAdminDashboard()">Lock Dashboard</button>
+                    <h2 style="color: var(--primary-dark); font-size: 1.4rem;">📊 Site Analytics & Moderation</h2>
+                    <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="closeAdminDashboard()">Lock Portal</button>
                 </div>
 
                 <div style="display: flex; gap: 16px; margin-bottom: 20px;">
                     <div style="flex: 1; background: #eef4fa; padding: 16px; border-radius: 8px; text-align: center;">
                         <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">TOTAL VISITS LOGGED</span>
-                        <div id="totalVisitCount" style="font-size: 1.8rem; font-weight: bold; color: var(--primary-dark);">1</div>
+                        <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary-dark);">1</div>
                     </div>
                     <div style="flex: 1; background: #e6f4ea; padding: 16px; border-radius: 8px; text-align: center;">
                         <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">YOUR TIME ON SITE</span>
@@ -779,210 +766,212 @@
                     </div>
                 </div>
 
-                <div style="overflow-x: auto;">
-                    <table class="analytics-table">
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Day & Entry Date</th>
-                                <th>City & State</th>
-                                <th>IP Address</th>
-                                <th>Time Spent</th>
-                            </tr>
-                        </thead>
-                        <tbody id="analyticsTableBody">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
+                <!-- Admin Moderation Table -->
+                <div style="margin-top: 20px;">
+                    <h3 style="color: var(--primary-dark); margin-bottom: 12px;">🛡️ Registered Member Control Table</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="analytics-table">
+                            <thead>
+                                <tr>
+                                    <th>Member Name</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Reports</th>
+                                    <th>Owner Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMembersTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- REAL-TIME VISITOR TRACKING SYSTEM ---
-        const ADMIN_PASSWORD = "admin123"; // Default password to open Admin Dashboard
-        
-        let sessionStartTime = new Date();
-        let currentVisitorData = {
-            ip: "Loading...",
-            location: "Detecting...",
-            entryTime: "",
-            durationFormatted: "0s",
-            isCurrent: true
-        };
+        const ADMIN_PASSWORD = "admin123";
+        let isOwnerMode = false;
+        let currentUser = null;
+        let selectedPhotoBase64 = "";
 
-        // Initialize tracking on page load
         window.addEventListener('DOMContentLoaded', () => {
-            initVisitorTracking();
             loadLiveProfiles();
-            setInterval(updateSessionDuration, 1000);
         });
 
-        async function initVisitorTracking() {
-            // Format Day and Date
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const dayName = days[sessionStartTime.getDay()];
-            const formattedDate = sessionStartTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            const formattedTime = sessionStartTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            
-            currentVisitorData.entryTime = `${dayName}, ${formattedDate} @ ${formattedTime}`;
-
-            try {
-                // Fetch IP & Geolocation
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                currentVisitorData.ip = ipData.ip;
-
-                const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
-                const geoData = await geoResponse.json();
-                
-                if (geoData.city && geoData.region) {
-                    currentVisitorData.location = `${geoData.city}, ${geoData.region}`;
-                } else {
-                    currentVisitorData.location = "United States";
+        /* --- OWNER MODE CONTROLS --- */
+        function toggleOwnerMode() {
+            if (!isOwnerMode) {
+                const pass = prompt("Owner Verification Required. Enter Admin Password:");
+                if (pass === ADMIN_PASSWORD) {
+                    isOwnerMode = true;
+                    document.getElementById('ownerToggleBtn').classList.add('btn-owner-badge');
+                    document.getElementById('ownerToggleBtn').textContent = '👑 Owner Mode: ACTIVE';
+                    alert("Owner controls unlocked! You can now ban or delete profiles directly from the card feed.");
+                    loadLiveProfiles();
+                } else if (pass !== null) {
+                    alert("Incorrect password.");
                 }
-            } catch (error) {
-                currentVisitorData.ip = "Hidden / Protected";
-                currentVisitorData.location = "Location Unavailable";
-            }
-
-            saveVisitorSession();
-        }
-
-        function updateSessionDuration() {
-            const now = new Date();
-            const totalSeconds = Math.floor((now - sessionStartTime) / 1000);
-            
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            
-            if (minutes > 0) {
-                currentVisitorData.durationFormatted = `${minutes}m ${seconds}s`;
             } else {
-                currentVisitorData.durationFormatted = `${seconds}s`;
-            }
-
-            // Update live admin timer display if open
-            const liveTimerEl = document.getElementById('liveTimerDisplay');
-            if (liveTimerEl) liveTimerEl.textContent = currentVisitorData.durationFormatted;
-
-            // Update current visitor row if visible in table
-            const currentDurEl = document.getElementById('currentSessionDur');
-            if (currentDurEl) currentDurEl.textContent = currentVisitorData.durationFormatted;
-        }
-
-        function saveVisitorSession() {
-            let logs = JSON.parse(localStorage.getItem('4bf_visitor_logs') || '[]');
-            
-            // Limit stored log history to last 15 visitors
-            if (logs.length > 15) logs.pop();
-
-            localStorage.setItem('4bf_visitor_logs', JSON.stringify(logs));
-        }
-
-        // --- ADMIN PORTAL LOGIC ---
-        function verifyAdminPass(e) {
-            e.preventDefault();
-            const entered = document.getElementById('adminPassInput').value;
-            if (entered === ADMIN_PASSWORD) {
-                document.getElementById('adminAuthView').style.display = 'none';
-                document.getElementById('adminDashboardView').style.display = 'block';
-                renderAdminDashboard();
-            } else {
-                alert("Incorrect Admin Password.");
+                isOwnerMode = false;
+                document.getElementById('ownerToggleBtn').classList.remove('btn-owner-badge');
+                document.getElementById('ownerToggleBtn').textContent = '👑 Owner Mode';
+                alert("Owner controls locked.");
+                loadLiveProfiles();
             }
         }
 
-        function closeAdminDashboard() {
-            document.getElementById('adminAuthView').style.display = 'block';
-            document.getElementById('adminDashboardView').style.display = 'none';
-            document.getElementById('adminPassInput').value = '';
-            closeModal('adminModal');
-        }
+        /* --- DISPLAYING PROFILES --- */
+        function loadLiveProfiles() {
+            const container = document.getElementById('live-members-container');
+            const storedProfiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            const blockedUsers = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
 
-        function renderAdminDashboard() {
-            const tableBody = document.getElementById('analyticsTableBody');
-            const storedLogs = JSON.parse(localStorage.getItem('4bf_visitor_logs') || '[]');
-            
-            document.getElementById('totalVisitCount').textContent = storedLogs.length + 1;
-
-            let html = `
-                <tr>
-                    <td><span class="badge-live">Active Now</span></td>
-                    <td>${currentVisitorData.entryTime}</td>
-                    <td><strong>${currentVisitorData.location}</strong></td>
-                    <td><code>${currentVisitorData.ip}</code></td>
-                    <td id="currentSessionDur">${currentVisitorData.durationFormatted}</td>
-                </tr>
-            `;
-
-            storedLogs.forEach(log => {
-                html += `
-                    <tr style="color: var(--text-muted);">
-                        <td><span style="font-size: 0.75rem; color: #888;">Recent</span></td>
-                        <td>${log.entryTime || 'Earlier Today'}</td>
-                        <td>${log.location || 'Unknown'}</td>
-                        <td><code>${log.ip || '127.0.0.1'}</code></td>
-                        <td>${log.durationFormatted || 'Exited'}</td>
-                    </tr>
-                `;
+            // Filter banned profiles for general public, but show all to Owner with a banner
+            const profilesToDisplay = storedProfiles.filter(p => {
+                if (isOwnerMode) return true; // Owner sees all, including banned/blocked
+                return !blockedUsers.includes(p.id) && !p.isBanned;
             });
 
-            tableBody.innerHTML = html;
+            if (profilesToDisplay.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted); padding: 20px;">No public profiles available. Click "Create Profile" to add one!</p>';
+                return;
+            }
+
+            container.innerHTML = profilesToDisplay.map(profile => {
+                const isBanned = profile.isBanned;
+                
+                return `
+                    <div class="category-item-card" id="card-${profile.id}" style="${isBanned ? 'opacity: 0.65; border: 2px solid #ef4444;' : ''}">
+                        ${isBanned ? '<div style="background:#ef4444; color:white; font-size:0.75rem; font-weight:bold; text-align:center; padding:4px;">BANNED / SUSPENDED</div>' : ''}
+                        <div class="category-header-title">${escapeHtml(profile.goal)}</div>
+                        <img src="${profile.photoUrl}" class="profile-img" alt="${escapeHtml(profile.name)}">
+                        <div class="profile-body">
+                            <h3 class="profile-title">${escapeHtml(profile.name)}</h3>
+                            <p class="profile-desc">${escapeHtml(profile.details)}</p>
+                            <button class="btn-connect" onclick="sendInterest('${profile.id}', '${escapeHtml(profile.name)}')">
+                                😉 Send Expressed Interest
+                            </button>
+                            <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.78rem;">
+                                <a href="javascript:void(0)" style="color: var(--text-muted);" onclick="reportUser('${profile.id}')">🚩 Report</a>
+                                <a href="javascript:void(0)" style="color: #d9534f;" onclick="blockUser('${profile.id}')">🚫 Block User</a>
+                            </div>
+                        </div>
+
+                        <!-- Direct On-Card Owner Toolbar -->
+                        ${isOwnerMode ? `
+                            <div class="owner-card-toolbar">
+                                <span>🔑 Owner Quick Action:</span>
+                                <div class="owner-btn-group">
+                                    <button class="btn-owner-action btn-owner-ban" onclick="toggleBanUser('${profile.id}')">
+                                        ${isBanned ? 'Unban User' : 'Ban User'}
+                                    </button>
+                                    <button class="btn-owner-action btn-owner-delete" onclick="deleteUserPermanently('${profile.id}')">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
         }
 
-        // --- FIREBASE & WEB PLATFORM LOGIC ---
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        if (firebaseConfig.apiKey !== "YOUR_API_KEY" && !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        /* --- USER ACTIONS --- */
+        function sendInterest(targetId, targetName) {
+            if (!currentUser) {
+                alert("Please log in or create a profile first to express interest in " + targetName + "!");
+                openModal('userModal', 'login');
+                return;
+            }
+            alert("✨ Expressed Interest Sent! We notified " + targetName + ".");
         }
 
-        let auth, db;
-        try {
-            auth = firebase.auth();
-            db = firebase.firestore();
-        } catch (e) {
-            console.log("Firebase setup pending configuration.");
-        }
-
-        let base64PhotoStr = "";
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const maxW = 400;
-                        const scale = maxW / img.width;
-                        canvas.width = maxW;
-                        canvas.height = img.height * scale;
-
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        base64PhotoStr = canvas.toDataURL('image/jpeg', 0.7);
-                        
-                        const imgPreview = document.getElementById('imgPreview');
-                        imgPreview.src = base64PhotoStr;
-                        imgPreview.style.display = 'block';
-                    };
-                };
-                reader.readAsDataURL(file);
+        function blockUser(targetId) {
+            if (confirm("Block this user? They will no longer appear on your screen.")) {
+                let blocked = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
+                if (!blocked.includes(targetId)) blocked.push(targetId);
+                localStorage.setItem('4bf_blocked_users', JSON.stringify(blocked));
+                loadLiveProfiles();
             }
         }
 
+        function reportUser(targetId) {
+            const reason = prompt("Reason for reporting this profile:");
+            if (reason) {
+                let reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
+                reports.push({ targetId: targetId, reason: reason, date: new Date().toLocaleString() });
+                localStorage.setItem('4bf_reports', JSON.stringify(reports));
+                alert("Report submitted for administrator review.");
+            }
+        }
+
+        /* --- OWNER MODERATION ACTIONS --- */
+        function toggleBanUser(profileId) {
+            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            profiles = profiles.map(p => {
+                if (p.id === profileId) p.isBanned = !p.isBanned;
+                return p;
+            });
+            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
+            loadLiveProfiles();
+            renderAdminModerationTable();
+        }
+
+        function deleteUserPermanently(profileId) {
+            if (confirm("Owner Confirmation: Permanently delete this profile from 4BF.com?")) {
+                let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+                profiles = profiles.filter(p => p.id !== profileId);
+                localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
+                loadLiveProfiles();
+                renderAdminModerationTable();
+            }
+        }
+
+        /* --- AUTH & PROFILE CREATION --- */
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            currentUser = { email: email };
+            alert("Logged in as " + email);
+            closeModal('userModal');
+        }
+
+        function handleRegistration(event) {
+            event.preventDefault();
+            const newProfile = {
+                id: 'usr_' + Date.now(),
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                goal: document.getElementById('regGoal').value,
+                details: document.getElementById('regDetails').value,
+                photoUrl: selectedPhotoBase64 || 'https://via.placeholder.com/300x220?text=Profile+Photo',
+                isBanned: false
+            };
+
+            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            profiles.unshift(newProfile);
+            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
+
+            currentUser = { email: newProfile.email, name: newProfile.name };
+            alert("Profile created successfully!");
+            closeModal('userModal');
+            loadLiveProfiles();
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('imgPreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+                selectedPhotoBase64 = reader.result;
+            };
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+        }
+
+        /* --- MODAL CONTROLS & ADMIN DASHBOARD --- */
         function openModal(modalId, mode = 'login') {
             document.getElementById(modalId).style.display = 'flex';
             if (modalId === 'userModal') toggleAuthMode(mode);
@@ -995,138 +984,81 @@
         function toggleAuthMode(mode) {
             const loginForm = document.getElementById('loginForm');
             const regForm = document.getElementById('registerForm');
-            const tabLogin = document.getElementById('tabLoginBtn');
-            const tabReg = document.getElementById('tabRegisterBtn');
+            const tabLoginBtn = document.getElementById('tabLoginBtn');
+            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
 
             if (mode === 'login') {
                 loginForm.style.display = 'block';
                 regForm.style.display = 'none';
-                tabLogin.classList.add('active');
-                tabReg.classList.remove('active');
+                tabLoginBtn.classList.add('active');
+                tabRegisterBtn.classList.remove('active');
             } else {
                 loginForm.style.display = 'none';
                 regForm.style.display = 'block';
-                tabReg.classList.add('active');
-                tabLogin.classList.remove('active');
+                tabLoginBtn.classList.remove('active');
+                tabRegisterBtn.classList.add('active');
             }
         }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            if (!auth) {
-                alert("Please connect your Firebase project keys to log in.");
-                return;
-            }
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-                alert("Welcome back!");
-                closeModal('userModal');
-            } catch (error) {
-                alert("Login failed: " + error.message);
-            }
-        }
-
-        async function handleRegistration(e) {
-            e.preventDefault();
-            if (!auth || !db) {
-                alert("Please add your Firebase keys to save registration data online.");
-                return;
-            }
-            const submitBtn = document.getElementById('regSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Creating Profile...";
-
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const names = document.getElementById('regName').value;
-            const goal = document.getElementById('regGoal').value;
-            const details = document.getElementById('regDetails').value;
-
-            try {
-                const userCred = await auth.createUserWithEmailAndPassword(email, password);
-                
-                await db.collection("profiles").doc(userCred.user.uid).set({
-                    uid: userCred.user.uid,
-                    names: names,
-                    email: email,
-                    goal: goal,
-                    details: details,
-                    photoUrl: base64PhotoStr,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                alert("Profile created successfully!");
-                closeModal('userModal');
-                loadLiveProfiles();
-            } catch (error) {
-                alert("Error creating profile: " + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Create Public Profile";
-            }
-        }
-
-        const demoProfiles = [
-            {
-                names: "David & Milo 🐕",
-                goal: "Dog Walk Date",
-                details: "Looking for local dog owners for weekend trail walks and casual park hangouts.",
-                photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                names: "Julian & Chris",
-                goal: "Meet in the Park",
-                details: "Enjoying coffee walks, outdoor sketching, and relaxed conversations on afternoons off.",
-                photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                names: "Alex",
-                goal: "Running or Exercise Dates at the Gym",
-                details: "Training for a 10k! Looking for a fitness partner who enjoys morning runs or weight sessions.",
-                photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
-            }
-        ];
-
-        function loadLiveProfiles() {
-            const container = document.getElementById('live-members-container');
-            
-            if (db && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                db.collection("profiles").orderBy("createdAt", "desc").limit(12).onSnapshot((snapshot) => {
-                    if (snapshot.empty) {
-                        renderDemoProfiles(container);
-                        return;
-                    }
-                    container.innerHTML = "";
-                    snapshot.forEach((doc) => {
-                        const profile = doc.data();
-                        renderCard(container, profile);
-                    });
-                }, () => renderDemoProfiles(container));
+        function verifyAdminPass(event) {
+            event.preventDefault();
+            const pass = document.getElementById('adminPassInput').value;
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('adminAuthView').style.display = 'none';
+                document.getElementById('adminDashboardView').style.display = 'block';
+                renderAdminModerationTable();
             } else {
-                renderDemoProfiles(container);
+                alert("Incorrect password.");
             }
         }
 
-        function renderDemoProfiles(container) {
-            container.innerHTML = "";
-            demoProfiles.forEach(profile => renderCard(container, profile));
+        function closeAdminDashboard() {
+            document.getElementById('adminAuthView').style.display = 'block';
+            document.getElementById('adminDashboardView').style.display = 'none';
+            document.getElementById('adminPassInput').value = '';
+            closeModal('adminModal');
         }
 
-        function renderCard(container, profile) {
-            container.innerHTML += `
-                <div class="category-item-card">
-                    <div class="category-header-title">📍 ${profile.goal}</div>
-                    <img src="${profile.photoUrl}" class="profile-img" alt="${profile.names}">
-                    <div class="profile-body">
-                        <h3 class="profile-title">${profile.names}</h3>
-                        <p class="profile-desc">${profile.details}</p>
-                        <button class="btn-connect" onclick="openModal('userModal', 'register')">Say Hello 🐾</button>
-                    </div>
-                </div>
-            `;
+        function renderAdminModerationTable() {
+            const tbody = document.getElementById('adminMembersTableBody');
+            if (!tbody) return;
+
+            const profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
+            const reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
+
+            if (profiles.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 12px;">No registered members found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = profiles.map(profile => {
+                const userReports = reports.filter(r => r.targetId === profile.id).length;
+                const statusBadge = profile.isBanned 
+                    ? '<span style="background:#ef4444; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem;">BANNED</span>' 
+                    : '<span class="badge-live">ACTIVE</span>';
+
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(profile.name)}</strong><br><small style="color:var(--text-muted);">${profile.email || 'No email'}</small></td>
+                        <td>${escapeHtml(profile.goal)}</td>
+                        <td>${statusBadge}</td>
+                        <td><strong style="color: ${userReports > 0 ? '#ef4444' : 'inherit'}">${userReports} Report(s)</strong></td>
+                        <td>
+                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #f59e0b; color: white; border: none; cursor:pointer;" onclick="toggleBanUser('${profile.id}')">
+                                ${profile.isBanned ? 'Unban' : 'Ban User'}
+                            </button>
+                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #ef4444; color: white; border: none; cursor:pointer;" onclick="deleteUserPermanently('${profile.id}')">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
         }
     </script>
 </body>
