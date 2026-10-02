@@ -1,1077 +1,2346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4BF.com - From Best Friends to Boyfriends</title>
-    <!-- Firebase Compatibility SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <style>
-        :root {
-            --primary: #2b5c8f;
-            --primary-dark: #1e4267;
-            --accent: #e07a5f;
-            --accent-hover: #d06346;
-            --bg-light: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-dark: #2b2d42;
-            --text-muted: #6c757d;
-            --border-color: #e9ecef;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-            --radius-md: 12px;
-            --radius-lg: 16px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        /* Navigation */
-        header {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .brand-container h1 {
-            font-size: 1.4rem;
-            color: var(--primary-dark);
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-container .tagline-head {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .nav-buttons .btn {
-            padding: 10px 20px;
-            margin-left: 8px;
-            border-radius: 30px;
-            border: 1px solid var(--primary);
-            background: transparent;
-            color: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        /* Owner Mode Button Hidden by Default for Public */
-        #ownerToggleBtn {
-            display: none;
-        }
-
-        .nav-buttons .btn:hover {
-            background: #f0f4f8;
-        }
-
-        .nav-buttons .btn-primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .nav-buttons .btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .nav-buttons .btn-owner-badge {
-            background: #1e293b;
-            color: #fbbf24;
-            border-color: #fbbf24;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #1e4267 0%, #2b5c8f 50%, #3d7ab8 100%);
-            color: white;
-            padding: 70px 20px 80px 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h2 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 24px;
-            line-height: 1.2;
-        }
-
-        .hero-highlights {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin: 32px 0 40px 0;
-        }
-
-        .highlight-card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 20px 18px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            text-align: left;
-            gap: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .highlight-card:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        .highlight-number {
-            background: var(--accent);
-            color: white;
-            font-weight: 800;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 1.1rem;
-        }
-
-        .highlight-text {
-            font-size: 1.05rem;
-            font-weight: 500;
-            line-height: 1.4;
-            color: #ffffff;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-large {
-            padding: 14px 32px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            border-radius: 30px;
-            cursor: pointer;
-            border: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn-large:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-outline-hero {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Layout Container */
-        .section-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-header h2 {
-            font-size: 2rem;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-        }
-
-        .section-header p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            padding: 30px 24px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-            display: inline-block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-
-        .feature-card p {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-        }
-
-        /* Profile Cards Grid */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .category-item-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease;
-            position: relative;
-        }
-
-        .category-item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .category-header-title {
-            background: #f1f5f9;
-            padding: 12px 16px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            border-bottom: 1px solid var(--border-color);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .profile-img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            background: #e2e8f0;
-        }
-
-        .profile-body {
-            padding: 18px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-title {
-            margin: 0 0 8px 0;
-            font-size: 1.2rem;
-            color: var(--text-dark);
-        }
-
-        .profile-desc {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin: 0 0 16px 0;
-            flex-grow: 1;
-        }
-
-        .btn-connect {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: var(--primary);
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-connect:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Owner Direct Action Toolbar on Cards */
-        .owner-card-toolbar {
-            background: #1e293b;
-            color: #ffffff;
-            padding: 10px;
-            font-size: 0.8rem;
-            border-top: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .owner-card-toolbar span {
-            color: #fbbf24;
-            font-weight: bold;
-        }
-
-        .owner-btn-group {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-owner-action {
-            flex: 1;
-            padding: 6px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-owner-ban {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .btn-owner-delete {
-            background: #ef4444;
-            color: white;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 36px;
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 480px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-large {
-            max-width: 850px;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 18px; right: 20px;
-            font-size: 1.6rem;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: var(--text-muted);
-        }
-
-        .tab-buttons {
-            display: flex;
-            margin-bottom: 24px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            background: none;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-muted);
-        }
-
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom: 2px solid var(--primary);
-            margin-bottom: -2px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-dark);
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            background: #fafafa;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: #ffffff;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            height: 90px;
-        }
-
-        #imgPreview {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* Analytics & Moderation Tables */
-        .analytics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            text-align: left;
-        }
-
-        .analytics-table th, .analytics-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .analytics-table th {
-            background-color: #f1f5f9;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-
-        .analytics-table tr:hover {
-            background-color: #f8fafc;
-        }
-
-        .badge-live {
-            background: #10b981;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: rgba(255,255,255,0.8);
-            padding: 40px 20px 30px 20px;
-            font-size: 0.85rem;
-            margin-top: 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-content {
-            max-width: 1100px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .disclaimer-text {
-            color: rgba(255, 255, 255, 0.65);
-            margin: 16px 0;
-            line-height: 1.5;
-            font-size: 0.78rem;
-            text-align: justify;
-            text-align-last: center;
-        }
-
-        .footer-links {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: #ffffff;
-            text-decoration: underline;
-        }
-
-        .admin-link {
-            color: rgba(255, 255, 255, 0.4) !important;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>4BF.com | What Are You 4?</title>
+
+<meta name="description" content="4BF.com helps you discover ideas for friends, fun, fitness, dating, pets, travel, business, hobbies and adventure. Choose what you're 4 and discover something to do.">
+
+<meta name="keywords" content="friends, activities, dating ideas, free date ideas, fitness partner, pet activities, travel, things to do, hobbies, networking, local activities, fun things to do">
+
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#090a16">
+
+<meta property="og:title" content="4BF.com | What Are You 4?">
+<meta property="og:description" content="Friends. Fun. Fitness. Dating. Pets. Travel. Business. Adventure. Discover what you're 4.">
+<meta property="og:type" content="website">
+
+<style>
+:root{
+  --bg:#070812;
+  --bg2:#0c0e1c;
+  --card:#111425;
+  --card2:#171a30;
+  --purple:#7557ff;
+  --purple2:#9c73ff;
+  --blue:#2ea8ff;
+  --cyan:#43e7ff;
+  --coral:#ff5f6d;
+  --pink:#ff4ca5;
+  --green:#42df9b;
+  --yellow:#ffd166;
+  --white:#ffffff;
+  --text:#ececf4;
+  --muted:#a6a8bd;
+  --border:rgba(255,255,255,.10);
+  --shadow:0 20px 55px rgba(0,0,0,.38);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  line-height:1.5;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(117,87,255,.16),transparent 28%),
+    radial-gradient(circle at 90% 25%,rgba(46,168,255,.10),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(255,76,165,.07),transparent 30%),
+    var(--bg);
+}
+
+a{
+  color:inherit;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.container{
+  max-width:1280px;
+  margin:auto;
+  padding:0 20px;
+}
+
+/* TOP */
+
+.topbar{
+  background:#04050b;
+  border-bottom:1px solid var(--border);
+  padding:7px 20px;
+}
+
+.topbar-inner{
+  max-width:1280px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  flex-wrap:wrap;
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:.05em;
+}
+
+.topbar strong{
+  color:var(--cyan);
+}
+
+/* HEADER */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(7,8,18,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav{
+  max-width:1280px;
+  min-height:72px;
+  margin:auto;
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+  gap:10px;
+}
+
+.logo-box{
+  width:43px;
+  height:43px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  font-size:22px;
+  font-weight:1000;
+  box-shadow:0 0 28px rgba(117,87,255,.35);
+}
+
+.logo-text{
+  font-size:29px;
+  font-weight:1000;
+  letter-spacing:-1.8px;
+}
+
+.logo-text span{
+  color:var(--cyan);
+}
+
+.navlinks{
+  display:flex;
+  gap:20px;
+}
+
+.navlinks a{
+  text-decoration:none;
+  color:#b8bad0;
+  font-size:11px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+
+.navlinks a:hover{
+  color:white;
+}
+
+.nav-cta{
+  text-decoration:none;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  padding:10px 16px;
+  border-radius:30px;
+  font-size:11px;
+  font-weight:900;
+}
+
+/* HERO */
+
+.hero{
+  position:relative;
+  min-height:720px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+}
+
+.hero:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 75% 40%,rgba(46,168,255,.18),transparent 24%),
+    radial-gradient(circle at 25% 45%,rgba(117,87,255,.23),transparent 28%);
+  pointer-events:none;
+}
+
+.hero-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(2px);
+  opacity:.55;
+}
+
+.orb1{
+  width:320px;
+  height:320px;
+  right:-100px;
+  top:60px;
+  background:linear-gradient(135deg,var(--purple),transparent);
+}
+
+.orb2{
+  width:230px;
+  height:230px;
+  right:15%;
+  bottom:30px;
+  background:linear-gradient(135deg,var(--blue),transparent);
+}
+
+.hero-inner{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:1280px;
+  margin:auto;
+  padding:90px 20px;
+}
+
+.hero-badge{
+  display:inline-block;
+  padding:7px 13px;
+  border:1px solid rgba(67,231,255,.32);
+  background:rgba(67,231,255,.06);
+  border-radius:30px;
+  color:var(--cyan);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.hero h1{
+  max-width:1000px;
+  margin:22px 0 10px;
+  font-size:clamp(67px,11vw,145px);
+  line-height:.82;
+  letter-spacing:-8px;
+  font-weight:1000;
+}
+
+.hero h1 span{
+  background:linear-gradient(90deg,var(--purple2),var(--cyan),var(--pink));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero-tagline{
+  margin-top:20px;
+  font-size:clamp(22px,3vw,36px);
+  font-weight:900;
+}
+
+.hero-copy{
+  max-width:760px;
+  color:#b8bad0;
+  font-size:17px;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:28px;
+}
+
+.btn{
+  border:0;
+  border-radius:30px;
+  padding:13px 20px;
+  font-size:12px;
+  font-weight:900;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+.btn-primary{
+  color:white;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  box-shadow:0 12px 35px rgba(117,87,255,.25);
+}
+
+.btn-outline{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.18);
+  color:white;
+}
+
+/* WHAT ARE YOU 4 */
+
+.choice-section{
+  position:relative;
+  z-index:5;
+  margin-top:-60px;
+}
+
+.choice-box{
+  background:rgba(14,16,31,.96);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:28px;
+  box-shadow:var(--shadow);
+}
+
+.choice-title{
+  text-align:center;
+  font-size:clamp(28px,4vw,45px);
+  font-weight:1000;
+  margin:0 0 5px;
+}
+
+.choice-sub{
+  text-align:center;
+  color:var(--muted);
+  margin:0 0 22px;
+}
+
+.choice-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+
+.choice{
+  border:1px solid var(--border);
+  background:#121528;
+  color:white;
+  border-radius:13px;
+  padding:18px 8px;
+  transition:.2s;
+}
+
+.choice:hover,
+.choice.active{
+  transform:translateY(-3px);
+  border-color:var(--purple2);
+  background:linear-gradient(145deg,#211b45,#15213b);
+}
+
+.choice-icon{
+  display:block;
+  font-size:27px;
+  margin-bottom:5px;
+}
+
+.choice-name{
+  display:block;
+  font-weight:900;
+  font-size:12px;
+}
+
+/* PERSONAL RESULT */
+
+.personal-result{
+  display:none;
+  margin-top:18px;
+  background:linear-gradient(135deg,rgba(117,87,255,.13),rgba(46,168,255,.08));
+  border:1px solid rgba(117,87,255,.35);
+  border-radius:12px;
+  padding:20px;
+}
+
+.personal-result h3{
+  margin:0 0 5px;
+  font-size:22px;
+}
+
+.personal-result p{
+  margin:0 0 12px;
+  color:var(--muted);
+}
+
+/* GENERAL */
+
+.section{
+  padding:72px 0;
+}
+
+.section-dark{
+  background:#090b16;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+
+.section-head{
+  margin-bottom:28px;
+}
+
+.kicker{
+  color:var(--cyan);
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+}
+
+.section-head h2{
+  margin:5px 0;
+  font-size:clamp(31px,4vw,49px);
+  letter-spacing:-2px;
+}
+
+.section-head p{
+  margin:0;
+  max-width:800px;
+  color:var(--muted);
+}
+
+/* CATEGORIES */
+
+.category-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.category{
+  min-height:225px;
+  position:relative;
+  overflow:hidden;
+  border-radius:15px;
+  border:1px solid var(--border);
+  padding:23px;
+  background:linear-gradient(145deg,#15182b,#0d0f1d);
+  transition:.25s;
+}
+
+.category:hover{
+  transform:translateY(-4px);
+  border-color:rgba(117,87,255,.65);
+}
+
+.category:after{
+  content:"";
+  position:absolute;
+  width:150px;
+  height:150px;
+  right:-70px;
+  bottom:-80px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(117,87,255,.25),transparent 65%);
+}
+
+.category-icon{
+  font-size:34px;
+}
+
+.category h3{
+  margin:10px 0 5px;
+  font-size:21px;
+}
+
+.category p{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.category button{
+  border:0;
+  background:none;
+  padding:0;
+  color:var(--cyan);
+  font-weight:850;
+  font-size:12px;
+}
+
+/* NEAR ME */
+
+.near-grid{
+  display:grid;
+  grid-template-columns:.75fr 1.25fr;
+  gap:18px;
+}
+
+.panel{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:23px;
+}
+
+.panel h3{
+  margin-top:0;
+  font-size:24px;
+}
+
+.panel p{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.field{
+  margin-bottom:12px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:5px;
+  color:#c6c8d8;
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.field input,
+.field select{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#090b16;
+  color:white;
+  padding:12px;
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--purple2);
+}
+
+.action-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.action-btn{
+  border:0;
+  padding:12px;
+  border-radius:8px;
+  color:white;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+}
+
+.action-btn.secondary{
+  background:#20243c;
+  border:1px solid var(--border);
+}
+
+.location-status{
+  margin-top:13px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.near-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+
+.near-option{
+  border:1px solid var(--border);
+  background:#111426;
+  color:white;
+  border-radius:10px;
+  padding:17px 10px;
+  text-align:center;
+  text-decoration:none;
+  transition:.2s;
+}
+
+.near-option:hover{
+  background:#1a1e36;
+  border-color:var(--blue);
+  transform:translateY(-2px);
+}
+
+.near-option span{
+  display:block;
+  font-size:26px;
+}
+
+.near-option strong{
+  display:block;
+  font-size:11px;
+  margin-top:5px;
+}
+
+/* GENERATOR */
+
+.generator-grid{
+  display:grid;
+  grid-template-columns:.85fr 1.15fr;
+  gap:18px;
+}
+
+.generator-result{
+  min-height:370px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at center,rgba(117,87,255,.18),transparent 50%),
+    #0d0f1e;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:30px;
+}
+
+.idea-icon{
+  font-size:54px;
+}
+
+.idea-title{
+  font-size:30px;
+  font-weight:1000;
+  margin:8px 0;
+}
+
+.idea-description{
+  max-width:500px;
+  color:var(--muted);
+}
+
+/* FREE IDEAS */
+
+.ideas-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.idea-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--card);
+  padding:19px;
+}
+
+.idea-card span{
+  font-size:27px;
+}
+
+.idea-card h3{
+  font-size:16px;
+  margin:8px 0 4px;
+}
+
+.idea-card p{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* CONVERSATION */
+
+.conversation{
+  background:
+    linear-gradient(135deg,rgba(117,87,255,.17),rgba(46,168,255,.10)),
+    #101326;
+  border:1px solid rgba(117,87,255,.35);
+  border-radius:20px;
+  padding:35px;
+  text-align:center;
+}
+
+.conversation h2{
+  margin-top:0;
+  font-size:clamp(30px,4vw,46px);
+}
+
+.conversation-controls{
+  max-width:650px;
+  margin:20px auto;
+  display:flex;
+  gap:8px;
+}
+
+.conversation-controls select{
+  flex:1;
+  border:1px solid var(--border);
+  background:#090b16;
+  color:white;
+  border-radius:30px;
+  padding:12px 15px;
+}
+
+.question-box{
+  max-width:800px;
+  margin:20px auto 0;
+  min-height:120px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.20);
+  border-radius:13px;
+  padding:25px;
+  font-size:22px;
+  font-weight:800;
+}
+
+/* SAFETY */
+
+.safety-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.safety-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+}
+
+.safety-card span{
+  font-size:28px;
+}
+
+.safety-card h3{
+  font-size:16px;
+  margin:8px 0 4px;
+}
+
+.safety-card p{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* FOOTER */
+
+footer{
+  background:#03040a;
+  border-top:1px solid var(--border);
+  padding:45px 20px 25px;
+}
+
+.footer-grid{
+  max-width:1280px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:30px;
+}
+
+.footer-logo{
+  font-size:31px;
+  font-weight:1000;
+}
+
+.footer-logo span{
+  color:var(--cyan);
+}
+
+footer p,
+footer a{
+  color:var(--muted);
+  font-size:12px;
+}
+
+footer a{
+  display:block;
+  text-decoration:none;
+  margin-bottom:7px;
+}
+
+footer h4{
+  color:white;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.disclaimer{
+  max-width:1280px;
+  margin:30px auto 0;
+  border-top:1px solid var(--border);
+  padding-top:20px;
+  color:#7f8298;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.footer-bottom{
+  max-width:1280px;
+  margin:18px auto 0;
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
+  color:#73768c;
+  font-size:11px;
+}
+
+/* MOBILE */
+
+@media(max-width:1050px){
+  .choice-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .ideas-grid,
+  .safety-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:850px){
+  .navlinks{
+    display:none;
+  }
+
+  .category-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .near-grid,
+  .generator-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    letter-spacing:-5px;
+  }
+}
+
+@media(max-width:620px){
+  .nav-cta{
+    display:none;
+  }
+
+  .hero{
+    min-height:650px;
+  }
+
+  .hero h1{
+    letter-spacing:-4px;
+  }
+
+  .choice-section{
+    margin-top:-35px;
+  }
+
+  .choice-grid,
+  .category-grid,
+  .ideas-grid,
+  .safety-grid,
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
+  .near-options{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .action-grid{
+    grid-template-columns:1fr;
+  }
+
+  .conversation-controls{
+    flex-direction:column;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <!-- Header Navigation -->
-    <header>
-        <div class="brand-container">
-            <h1>4BF.com</h1>
-            <div class="tagline-head">From best friends to boyfriends we have you covered</div>
-        </div>
-        <div class="nav-buttons">
-            <button class="btn" id="ownerToggleBtn" onclick="toggleOwnerMode()">👑 Owner Mode</button>
-            <button class="btn" onclick="openModal('userModal', 'login')">Log In</button>
-            <button class="btn btn-primary" onclick="openModal('userModal', 'register')">Create Profile</button>
-        </div>
-    </header>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div><strong>4BF.COM</strong> • REAL LIFE STARTS HERE</div>
+    <div>NO REGISTRATION • NO FAKE PROFILES • YOUR LOCATION IS YOUR CHOICE</div>
+  </div>
+</div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h2>From best friends to boyfriends, we have you covered.</h2>
-            
-            <div class="hero-highlights">
-                <div class="highlight-card">
-                    <div class="highlight-number">1</div>
-                    <div class="highlight-text">Connect over zero-stress no cost dates and casual activities.</div>
-                </div>
-                <div class="highlight-card">
-                    <div class="highlight-number">2</div>
-                    <div class="highlight-text">Skip awkward sit-down dinners.</div>
-                </div>
-                <div class="highlight-card">
-                    <div class="highlight-number">3</div>
-                    <div class="highlight-text">Meet up through low-pressure, real-life outdoor & fitness dates.</div>
-                </div>
-            </div>
+<header>
+  <div class="nav">
 
-            <div class="hero-cta">
-                <button class="btn-large btn-accent" onclick="openModal('userModal', 'register')">Create Your Free Profile</button>
-                <button class="btn-large btn-outline-hero" onclick="document.getElementById('community-section').scrollIntoView({behavior: 'smooth'})">Explore Community</button>
-            </div>
-        </div>
-    </section>
+    <a href="#" class="logo">
+      <div class="logo-box">4</div>
+      <div class="logo-text">4BF<span>.com</span></div>
+    </a>
 
-    <!-- Features Overview -->
-    <section class="section-container">
-        <div class="section-header">
-            <h2>How It Works</h2>
-            <p>Everything you can do inside our social community</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="feature-icon">🐾</span>
-                <h3>Bring Your Pets Along</h3>
-                <p>Include your furry best friends in your date setup. Host or join dog walk dates in safe local surroundings.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🌿</span>
-                <h3>No-Cost Activity Dates</h3>
-                <p>Focus on real connections rather than expensive bar tabs with park walkouts, picnics, and scenic bike rides.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🏃‍♂️</span>
-                <h3>Active & Gym Partners</h3>
-                <p>Find workout partners for gym sessions, morning runs, or athletic training while expanding your dating pool.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">👥</span>
-                <h3>Casual Group Hangouts</h3>
-                <p>Prefer safety in numbers? Meet up with mutual friend groups and ease into genuine relationships comfortably.</p>
-            </div>
-        </div>
-    </section>
+    <nav class="navlinks">
+      <a href="#choose">I'm 4...</a>
+      <a href="#discover">Discover</a>
+      <a href="#near">Near Me</a>
+      <a href="#generator">Idea Generator</a>
+      <a href="#conversation">Conversation</a>
+      <a href="#safety">Meet Safely</a>
+    </nav>
 
-    <!-- Active Members Section -->
-    <section id="community-section" class="section-container">
-        <div class="section-header">
-            <h2>Recent Members & Local Meetups</h2>
-            <p>See who is active and looking for casual activity dates nearby</p>
-        </div>
-        <div id="live-members-container" class="grid-container">
-            <!-- Dynamically populates profiles -->
-        </div>
-    </section>
+    <a href="#choose" class="nav-cta">What Are You 4?</a>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <p style="font-weight: bold; color: #ffffff;">&copy; 4BF.com - All Rights Reserved.</p>
-            <div class="disclaimer-text">
-                <strong>LEGAL & PRIVACY DISCLAIMER:</strong> 4BF.com is an open social networking venue designed to facilitate casual activity meetups, outdoor recreation, and social introductions. 4BF.com does not perform background checks or screening on users. Members are solely responsible for exercising personal safety precautions.
-            </div>
-            <div class="footer-links">
-                <a href="#" onclick="alert('Terms of Service: Always practice personal safety when meeting new friends.')">Terms of Service</a>
-                <a href="#" onclick="alert('Privacy Policy: Your personal information is kept secure.')">Privacy Policy</a>
-                <a class="admin-link" onclick="openModal('adminModal')">Owner & Admin Dashboard</a>
-            </div>
-        </div>
-    </footer>
+  </div>
+</header>
 
-    <!-- User Auth & Registration Modal -->
-    <div id="userModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
-            
-            <div class="tab-buttons">
-                <button id="tabLoginBtn" class="tab-btn active" onclick="toggleAuthMode('login')">Log In</button>
-                <button id="tabRegisterBtn" class="tab-btn" onclick="toggleAuthMode('register')">Create Profile</button>
-            </div>
+<main>
 
-            <!-- Login Form -->
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="yourname@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-connect" style="margin-top: 10px;">Log In</button>
-            </form>
+<section class="hero">
 
-            <!-- Profile Form -->
-            <form id="registerForm" style="display: none;" onsubmit="handleRegistration(event)">
-                <div class="form-group">
-                    <label>Your Name & Pet's Name</label>
-                    <input type="text" id="regName" placeholder="e.g., Marcus & Buster" required>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="regEmail" placeholder="yourname@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="regPassword" placeholder="••••••••" required>
-                </div>
-                <div class="form-group">
-                    <label>Preferred Date Category</label>
-                    <select id="regGoal" required>
-                        <option value="" disabled selected>Select an activity style...</option>
-                        <option value="Dog Walk Date">Dog Walk Date</option>
-                        <option value="Meet with Friends">Meet with Friends</option>
-                        <option value="Bike Ride Dates">Bike Ride Dates</option>
-                        <option value="Meet in the Park">Meet in the Park</option>
-                        <option value="Picnic Dates">Picnic Dates</option>
-                        <option value="Running or Exercise Dates at the Gym">Running or Exercise Dates at the Gym</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Profile Photo</label>
-                    <input type="file" id="regPhoto" accept="image/*" onchange="previewImage(event)" required>
-                    <img id="imgPreview" alt="Profile Preview">
-                </div>
-                <div class="form-group">
-                    <label>Public Bio / About You</label>
-                    <textarea id="regDetails" placeholder="Tell members about yourself..." required></textarea>
-                </div>
-                <button type="submit" class="btn-connect" style="margin-top: 10px;">Create Public Profile</button>
-            </form>
-        </div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+
+  <div class="hero-inner">
+
+    <div class="hero-badge">
+      Friends • Fun • Fitness • Dating • Life
     </div>
 
-    <!-- Admin & Owner Dashboard Modal -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content modal-large">
-            <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
-            
-            <div id="adminAuthView">
-                <h2 style="color: var(--primary-dark); margin-bottom: 8px; text-align: center;">Owner & Admin Portal</h2>
-                <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Enter owner key to access administrative controls.</p>
-                <form onsubmit="verifyAdminPass(event)">
-                    <div class="form-group">
-                        <label>Admin Password</label>
-                        <input type="password" id="adminPassInput" placeholder="Enter password..." required>
-                    </div>
-                    <button type="submit" class="btn-connect" style="margin-top: 10px;">Access Admin Controls</button>
-                </form>
-            </div>
+    <h1>
+      WHAT ARE<br>
+      YOU <span>4?</span>
+    </h1>
 
-            <div id="adminDashboardView" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
-                    <h2 style="color: var(--primary-dark); font-size: 1.4rem;">📊 Site Analytics & Moderation</h2>
-                    <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="closeAdminDashboard()">Lock Portal</button>
-                </div>
-
-                <div style="display: flex; gap: 16px; margin-bottom: 20px;">
-                    <div style="flex: 1; background: #eef4fa; padding: 16px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">TOTAL VISITS LOGGED</span>
-                        <div style="font-size: 1.8rem; font-weight: bold; color: var(--primary-dark);">1</div>
-                    </div>
-                    <div style="flex: 1; background: #e6f4ea; padding: 16px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: bold;">YOUR TIME ON SITE</span>
-                        <div id="liveTimerDisplay" style="font-size: 1.8rem; font-weight: bold; color: #137333;">0s</div>
-                    </div>
-                </div>
-
-                <!-- Admin Moderation Table -->
-                <div style="margin-top: 20px;">
-                    <h3 style="color: var(--primary-dark); margin-bottom: 12px;">🛡️ Registered Member Control Table</h3>
-                    <div style="overflow-x: auto;">
-                        <table class="analytics-table">
-                            <thead>
-                                <tr>
-                                    <th>Member Name</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Reports</th>
-                                    <th>Owner Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminMembersTableBody">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="hero-tagline">
+      Better Friends. Better Fun. Better Life.
     </div>
 
-    <script>
-        const ADMIN_PASSWORD = "admin123";
-        let isOwnerMode = false;
-        let currentUser = null;
-        let selectedPhotoBase64 = "";
+    <p class="hero-copy">
+      Whether you're looking for friendship, dating, fitness, pets,
+      travel, hobbies, networking or simply something fun to do,
+      4BF.com helps you turn an idea into a real-world experience.
+    </p>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            // Check if URL parameter '?admin=true' exists to display Owner button
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('admin') === 'true') {
-                const ownerBtn = document.getElementById('ownerToggleBtn');
-                if (ownerBtn) ownerBtn.style.display = 'inline-block';
-            }
+    <div class="hero-buttons">
+      <a href="#choose" class="btn btn-primary">Choose What You're 4</a>
+      <a href="#generator" class="btn btn-outline">Give Me Something To Do</a>
+    </div>
 
-            loadLiveProfiles();
-        });
+  </div>
 
-        /* --- OWNER MODE CONTROLS --- */
-        function toggleOwnerMode() {
-            if (!isOwnerMode) {
-                const pass = prompt("Owner Verification Required. Enter Admin Password:");
-                if (pass === ADMIN_PASSWORD) {
-                    isOwnerMode = true;
-                    document.getElementById('ownerToggleBtn').classList.add('btn-owner-badge');
-                    document.getElementById('ownerToggleBtn').textContent = '👑 Owner Mode: ACTIVE';
-                    alert("Owner controls unlocked! You can now ban or delete profiles directly from the card feed.");
-                    loadLiveProfiles();
-                } else if (pass !== null) {
-                    alert("Incorrect password.");
-                }
-            } else {
-                isOwnerMode = false;
-                document.getElementById('ownerToggleBtn').classList.remove('btn-owner-badge');
-                document.getElementById('ownerToggleBtn').textContent = '👑 Owner Mode';
-                alert("Owner controls locked.");
-                loadLiveProfiles();
-            }
-        }
+</section>
 
-        /* --- DISPLAYING PROFILES --- */
-        function loadLiveProfiles() {
-            const container = document.getElementById('live-members-container');
-            const storedProfiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            const blockedUsers = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
+<section class="choice-section" id="choose">
 
-            // Filter banned profiles for general public, but show all to Owner with a banner
-            const profilesToDisplay = storedProfiles.filter(p => {
-                if (isOwnerMode) return true;
-                return !blockedUsers.includes(p.id) && !p.isBanned;
-            });
+  <div class="container">
 
-            if (profilesToDisplay.length === 0) {
-                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--text-muted); padding: 20px;">No public profiles available. Click "Create Profile" to add one!</p>';
-                return;
-            }
+    <div class="choice-box">
 
-            container.innerHTML = profilesToDisplay.map(profile => {
-                const isBanned = profile.isBanned;
-                
-                return `
-                    <div class="category-item-card" id="card-${profile.id}" style="${isBanned ? 'opacity: 0.65; border: 2px solid #ef4444;' : ''}">
-                        ${isBanned ? '<div style="background:#ef4444; color:white; font-size:0.75rem; font-weight:bold; text-align:center; padding:4px;">BANNED / SUSPENDED</div>' : ''}
-                        <div class="category-header-title">${escapeHtml(profile.goal)}</div>
-                        <img src="${profile.photoUrl}" class="profile-img" alt="${escapeHtml(profile.name)}">
-                        <div class="profile-body">
-                            <h3 class="profile-title">${escapeHtml(profile.name)}</h3>
-                            <p class="profile-desc">${escapeHtml(profile.details)}</p>
-                            <button class="btn-connect" onclick="sendInterest('${profile.id}', '${escapeHtml(profile.name)}')">
-                                😉 Send Expressed Interest
-                            </button>
-                            <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.78rem;">
-                                <a href="javascript:void(0)" style="color: var(--text-muted);" onclick="reportUser('${profile.id}')">🚩 Report</a>
-                                <a href="javascript:void(0)" style="color: #d9534f;" onclick="blockUser('${profile.id}')">🚫 Block User</a>
-                            </div>
-                        </div>
+      <h2 class="choice-title">
+        I'M 4...
+      </h2>
 
-                        <!-- Direct On-Card Owner Toolbar -->
-                        ${isOwnerMode ? `
-                            <div class="owner-card-toolbar">
-                                <span>🔑 Owner Quick Action:</span>
-                                <div class="owner-btn-group">
-                                    <button class="btn-owner-action btn-owner-ban" onclick="toggleBanUser('${profile.id}')">
-                                        ${isBanned ? 'Unban User' : 'Ban User'}
-                                    </button>
-                                    <button class="btn-owner-action btn-owner-delete" onclick="deleteUserPermanently('${profile.id}')">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
+      <p class="choice-sub">
+        Pick what sounds good right now.
+      </p>
 
-        /* --- USER ACTIONS --- */
-        function sendInterest(targetId, targetName) {
-            if (!currentUser) {
-                alert("Please log in or create a profile first to express interest in " + targetName + "!");
-                openModal('userModal', 'login');
-                return;
-            }
-            alert("✨ Expressed Interest Sent! We notified " + targetName + ".");
-        }
+      <div class="choice-grid">
 
-        function blockUser(targetId) {
-            if (confirm("Block this user? They will no longer appear on your screen.")) {
-                let blocked = JSON.parse(localStorage.getItem('4bf_blocked_users') || '[]');
-                if (!blocked.includes(targetId)) blocked.push(targetId);
-                localStorage.setItem('4bf_blocked_users', JSON.stringify(blocked));
-                loadLiveProfiles();
-            }
-        }
+        <button class="choice" onclick="chooseGoal('friends',this)">
+          <span class="choice-icon">👥</span>
+          <span class="choice-name">FRIENDS</span>
+        </button>
 
-        function reportUser(targetId) {
-            const reason = prompt("Reason for reporting this profile:");
-            if (reason) {
-                let reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
-                reports.push({ targetId: targetId, reason: reason, date: new Date().toLocaleString() });
-                localStorage.setItem('4bf_reports', JSON.stringify(reports));
-                alert("Report submitted for administrator review.");
-            }
-        }
+        <button class="choice" onclick="chooseGoal('dating',this)">
+          <span class="choice-icon">❤️</span>
+          <span class="choice-name">DATING</span>
+        </button>
 
-        /* --- OWNER MODERATION ACTIONS --- */
-        function toggleBanUser(profileId) {
-            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            profiles = profiles.map(p => {
-                if (p.id === profileId) p.isBanned = !p.isBanned;
-                return p;
-            });
-            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
-            loadLiveProfiles();
-            renderAdminModerationTable();
-        }
+        <button class="choice" onclick="chooseGoal('fitness',this)">
+          <span class="choice-icon">🏃</span>
+          <span class="choice-name">FITNESS</span>
+        </button>
 
-        function deleteUserPermanently(profileId) {
-            if (confirm("Owner Confirmation: Permanently delete this profile from 4BF.com?")) {
-                let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-                profiles = profiles.filter(p => p.id !== profileId);
-                localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
-                loadLiveProfiles();
-                renderAdminModerationTable();
-            }
-        }
+        <button class="choice" onclick="chooseGoal('fun',this)">
+          <span class="choice-icon">🎉</span>
+          <span class="choice-name">FUN</span>
+        </button>
 
-        /* --- AUTH & PROFILE CREATION --- */
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            currentUser = { email: email };
-            alert("Logged in as " + email);
-            closeModal('userModal');
-        }
+        <button class="choice" onclick="chooseGoal('pets',this)">
+          <span class="choice-icon">🐕</span>
+          <span class="choice-name">PETS</span>
+        </button>
 
-        function handleRegistration(event) {
-            event.preventDefault();
-            const newProfile = {
-                id: 'usr_' + Date.now(),
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                goal: document.getElementById('regGoal').value,
-                details: document.getElementById('regDetails').value,
-                photoUrl: selectedPhotoBase64 || 'https://via.placeholder.com/300x220?text=Profile+Photo',
-                isBanned: false
-            };
+        <button class="choice" onclick="chooseGoal('travel',this)">
+          <span class="choice-icon">✈️</span>
+          <span class="choice-name">TRAVEL</span>
+        </button>
 
-            let profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            profiles.unshift(newProfile);
-            localStorage.setItem('4bf_profiles', JSON.stringify(profiles));
+        <button class="choice" onclick="chooseGoal('hobbies',this)">
+          <span class="choice-icon">🎨</span>
+          <span class="choice-name">HOBBIES</span>
+        </button>
 
-            currentUser = { email: newProfile.email, name: newProfile.name };
-            alert("Profile created successfully!");
-            closeModal('userModal');
-            loadLiveProfiles();
-        }
+        <button class="choice" onclick="chooseGoal('business',this)">
+          <span class="choice-icon">💼</span>
+          <span class="choice-name">BUSINESS</span>
+        </button>
 
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById('imgPreview');
-                output.src = reader.result;
-                output.style.display = 'block';
-                selectedPhotoBase64 = reader.result;
-            };
-            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
-        }
+        <button class="choice" onclick="chooseGoal('community',this)">
+          <span class="choice-icon">🤝</span>
+          <span class="choice-name">COMMUNITY</span>
+        </button>
 
-        /* --- MODAL CONTROLS & ADMIN DASHBOARD --- */
-        function openModal(modalId, mode = 'login') {
-            document.getElementById(modalId).style.display = 'flex';
-            if (modalId === 'userModal') toggleAuthMode(mode);
-        }
+        <button class="choice" onclick="chooseGoal('adventure',this)">
+          <span class="choice-icon">🌎</span>
+          <span class="choice-name">ADVENTURE</span>
+        </button>
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+      </div>
 
-        function toggleAuthMode(mode) {
-            const loginForm = document.getElementById('loginForm');
-            const regForm = document.getElementById('registerForm');
-            const tabLoginBtn = document.getElementById('tabLoginBtn');
-            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+      <div id="personalResult" class="personal-result"></div>
 
-            if (mode === 'login') {
-                loginForm.style.display = 'block';
-                regForm.style.display = 'none';
-                tabLoginBtn.classList.add('active');
-                tabRegisterBtn.classList.remove('active');
-            } else {
-                loginForm.style.display = 'none';
-                regForm.style.display = 'block';
-                tabLoginBtn.classList.remove('active');
-                tabRegisterBtn.classList.add('active');
-            }
-        }
+    </div>
 
-        function verifyAdminPass(event) {
-            event.preventDefault();
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === ADMIN_PASSWORD) {
-                document.getElementById('adminAuthView').style.display = 'none';
-                document.getElementById('adminDashboardView').style.display = 'block';
-                renderAdminModerationTable();
-            } else {
-                alert("Incorrect password.");
-            }
-        }
+  </div>
 
-        function closeAdminDashboard() {
-            document.getElementById('adminAuthView').style.display = 'block';
-            document.getElementById('adminDashboardView').style.display = 'none';
-            document.getElementById('adminPassInput').value = '';
-            closeModal('adminModal');
-        }
+</section>
 
-        function renderAdminModerationTable() {
-            const tbody = document.getElementById('adminMembersTableBody');
-            if (!tbody) return;
+<section class="section" id="discover">
 
-            const profiles = JSON.parse(localStorage.getItem('4bf_profiles') || '[]');
-            const reports = JSON.parse(localStorage.getItem('4bf_reports') || '[]');
+  <div class="container">
 
-            if (profiles.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 12px;">No registered members found.</td></tr>';
-                return;
-            }
+    <div class="section-head">
+      <div class="kicker">Discover Your 4</div>
+      <h2>There's more to life than scrolling.</h2>
+      <p>
+        4BF.com is designed around real activities and real experiences.
+        Pick a direction and discover ideas for getting out and doing something.
+      </p>
+    </div>
 
-            tbody.innerHTML = profiles.map(profile => {
-                const userReports = reports.filter(r => r.targetId === profile.id).length;
-                const statusBadge = profile.isBanned 
-                    ? '<span style="background:#ef4444; color:white; padding:2px 8px; border-radius:10px; font-size:0.75rem;">BANNED</span>' 
-                    : '<span class="badge-live">ACTIVE</span>';
+    <div class="category-grid">
 
-                return `
-                    <tr>
-                        <td><strong>${escapeHtml(profile.name)}</strong><br><small style="color:var(--text-muted);">${profile.email || 'No email'}</small></td>
-                        <td>${escapeHtml(profile.goal)}</td>
-                        <td>${statusBadge}</td>
-                        <td><strong style="color: ${userReports > 0 ? '#ef4444' : 'inherit'}">${userReports} Report(s)</strong></td>
-                        <td>
-                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #f59e0b; color: white; border: none; cursor:pointer;" onclick="toggleBanUser('${profile.id}')">
-                                ${profile.isBanned ? 'Unban' : 'Ban User'}
-                            </button>
-                            <button class="btn" style="padding: 4px 8px; font-size: 0.75rem; background: #ef4444; color: white; border: none; cursor:pointer;" onclick="deleteUserPermanently('${profile.id}')">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
+      <article class="category">
+        <div class="category-icon">👥</div>
+        <h3>4 Friends</h3>
+        <p>
+          Coffee, walks, hobbies, sports, games and simple activities
+          that can help turn acquaintances into friendships.
+        </p>
+        <button onclick="jumpToGenerator('Friend')">Find Friend Ideas →</button>
+      </article>
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
-        }
-    </script>
+      <article class="category">
+        <div class="category-icon">❤️</div>
+        <h3>4 Dating</h3>
+        <p>
+          Skip the pressure. Discover casual date ideas ranging from
+          free outdoor activities to coffee, entertainment and adventures.
+        </p>
+        <button onclick="jumpToGenerator('Date')">Find Date Ideas →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">🏃</div>
+        <h3>4 Fitness</h3>
+        <p>
+          Walking, hiking, running, cycling, recreation and fitness
+          ideas that are more social than another night on the couch.
+        </p>
+        <button onclick="quickNearSearch('gym')">Find Fitness Nearby →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">🐕</div>
+        <h3>4 Pets</h3>
+        <p>
+          Dog parks, walks, trails and pet-friendly activities where
+          your four-legged best friend can be part of the experience.
+        </p>
+        <button onclick="quickNearSearch('dog park')">Find Pet Activities →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">🎟️</div>
+        <h3>4 Fun</h3>
+        <p>
+          Movies, bowling, museums, music, parks, games, attractions
+          and entertainment when you simply want something to do.
+        </p>
+        <button onclick="jumpToGenerator('Group')">Find Something Fun →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">✈️</div>
+        <h3>4 Travel</h3>
+        <p>
+          Build ideas for day trips, road trips, sightseeing,
+          weekend adventures and discovering somewhere new.
+        </p>
+        <button onclick="quickNearSearch('tourist attraction')">Explore Nearby →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">🎨</div>
+        <h3>4 Hobbies</h3>
+        <p>
+          Golf, photography, art, gaming, cooking, cars, gardening,
+          books and countless interests are better when shared.
+        </p>
+        <button onclick="quickNearSearch('hobby shop')">Explore Hobbies →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">💼</div>
+        <h3>4 Business</h3>
+        <p>
+          Networking, coworking, professional events and casual
+          opportunities to meet entrepreneurs and business-minded people.
+        </p>
+        <button onclick="quickNearSearch('coworking space')">Explore Business →</button>
+      </article>
+
+      <article class="category">
+        <div class="category-icon">🤝</div>
+        <h3>4 Community</h3>
+        <p>
+          Volunteer, participate locally, support causes and discover
+          ways to spend time helping the community around you.
+        </p>
+        <button onclick="quickNearSearch('volunteer')">Explore Community →</button>
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section section-dark" id="near">
+
+  <div class="container">
+
+    <div class="section-head">
+      <div class="kicker">Explore Your Area</div>
+      <h2>Find something near you.</h2>
+      <p>
+        Enter a city or ZIP code, or choose Use My Location.
+        Your browser will request permission before location information is used.
+      </p>
+    </div>
+
+    <div class="near-grid">
+
+      <div class="panel">
+
+        <h3>📍 What sounds good?</h3>
+
+        <div class="field">
+          <label>City or ZIP Code</label>
+          <input id="locationInput" type="text" placeholder="Example: Tampa, FL or 33602">
+        </div>
+
+        <div class="field">
+          <label>Find</label>
+
+          <select id="nearCategory">
+            <option value="park">Parks</option>
+            <option value="coffee shop">Coffee</option>
+            <option value="hiking trail">Hiking</option>
+            <option value="dog park">Dog Parks</option>
+            <option value="bowling">Bowling</option>
+            <option value="museum">Museums</option>
+            <option value="gym">Fitness & Gyms</option>
+            <option value="golf course">Golf</option>
+            <option value="movie theater">Movies</option>
+            <option value="live music">Live Music</option>
+            <option value="tourist attraction">Attractions</option>
+            <option value="shopping">Shopping</option>
+            <option value="restaurant">Restaurants</option>
+            <option value="community center">Community Activities</option>
+          </select>
+
+        </div>
+
+        <div class="action-grid">
+
+          <button class="action-btn" onclick="searchByLocation()">
+            Search Area
+          </button>
+
+          <button class="action-btn secondary" onclick="useMyLocation()">
+            📍 Use My Location
+          </button>
+
+        </div>
+
+        <div class="location-status" id="locationStatus">
+          No location is used until you choose to search.
+        </div>
+
+      </div>
+
+      <div class="panel">
+
+        <h3>Popular Things To Find</h3>
+
+        <p>
+          Choose a category for a quick search.
+        </p>
+
+        <div class="near-options">
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('park')">
+            <span>🌳</span>
+            <strong>PARKS</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('coffee shop')">
+            <span>☕</span>
+            <strong>COFFEE</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('hiking trail')">
+            <span>🥾</span>
+            <strong>HIKING</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('dog park')">
+            <span>🐕</span>
+            <strong>DOG PARKS</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('bowling')">
+            <span>🎳</span>
+            <strong>BOWLING</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('museum')">
+            <span>🏛️</span>
+            <strong>MUSEUMS</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('gym')">
+            <span>🏋️</span>
+            <strong>FITNESS</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('golf course')">
+            <span>⛳</span>
+            <strong>GOLF</strong>
+          </a>
+
+          <a class="near-option" href="javascript:void(0)" onclick="quickNearSearch('tourist attraction')">
+            <span>📸</span>
+            <strong>ATTRACTIONS</strong>
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section" id="generator">
+
+  <div class="container">
+
+    <div class="section-head">
+      <div class="kicker">4BF Activity Generator</div>
+      <h2>Can't decide? Let 4BF decide.</h2>
+      <p>
+        Tell us what kind of experience you want and generate an activity idea.
+      </p>
+    </div>
+
+    <div class="generator-grid">
+
+      <div class="panel">
+
+        <div class="field">
+          <label>Who's Going?</label>
+
+          <select id="genPeople">
+            <option value="Solo">Just Me</option>
+            <option value="Friend">Friend</option>
+            <option value="Date">Date</option>
+            <option value="Group">Group</option>
+            <option value="Family">Family</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Budget</label>
+
+          <select id="genBudget">
+            <option value="Free">Free</option>
+            <option value="Low">Under $25</option>
+            <option value="Medium">Under $50</option>
+            <option value="Any">No Preference</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Where?</label>
+
+          <select id="genSetting">
+            <option value="Any">Surprise Me</option>
+            <option value="Outdoor">Outdoors</option>
+            <option value="Indoor">Indoors</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>How Much Time?</label>
+
+          <select id="genTime">
+            <option value="Quick">1–2 Hours</option>
+            <option value="Half">Half Day</option>
+            <option value="Full">Full Day</option>
+          </select>
+        </div>
+
+        <button class="action-btn" style="width:100%;" onclick="generateIdea()">
+          ✨ Give Me An Idea
+        </button>
+
+      </div>
+
+      <div class="generator-result">
+
+        <div>
+
+          <div class="idea-icon" id="ideaIcon">✨</div>
+
+          <div class="idea-title" id="ideaTitle">
+            Your next idea starts here.
+          </div>
+
+          <div class="idea-description" id="ideaDescription">
+            Choose your preferences and press Give Me An Idea.
+          </div>
+
+          <div style="margin-top:20px;">
+
+            <button class="btn btn-primary" onclick="generateIdea()">
+              Try Another Idea
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section section-dark">
+
+  <div class="container">
+
+    <div class="section-head">
+      <div class="kicker">Free Doesn't Mean Boring</div>
+      <h2>Things you can do without spending much—or anything.</h2>
+    </div>
+
+    <div class="ideas-grid">
+
+      <article class="idea-card">
+        <span>🌳</span>
+        <h3>Park Walk</h3>
+        <p>Pick a public park and take a relaxed walk together.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🌅</span>
+        <h3>Watch the Sunset</h3>
+        <p>Find a public scenic location and enjoy the view.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🐕</span>
+        <h3>Dog Walk</h3>
+        <p>Turn the daily dog walk into a social activity.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>📷</span>
+        <h3>Photo Walk</h3>
+        <p>Explore an interesting neighborhood and take pictures.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🥾</span>
+        <h3>Go Hiking</h3>
+        <p>Explore an appropriate public trail or nature area.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🏖️</span>
+        <h3>Beach Day</h3>
+        <p>If you're near the coast, bring chairs and enjoy the day.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🥪</span>
+        <h3>Simple Picnic</h3>
+        <p>Bring food from home and turn lunch into an outing.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🚲</span>
+        <h3>Bike Ride</h3>
+        <p>Choose a suitable public route and explore on two wheels.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>📚</span>
+        <h3>Library Visit</h3>
+        <p>Explore books, exhibitions, lectures or community activities.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🏙️</span>
+        <h3>Explore Downtown</h3>
+        <p>Walk through a nearby downtown district and discover something new.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🎲</span>
+        <h3>Game Night</h3>
+        <p>Bring out cards or board games and make your own entertainment.</p>
+      </article>
+
+      <article class="idea-card">
+        <span>🤝</span>
+        <h3>Volunteer</h3>
+        <p>Spend time together helping a legitimate local organization.</p>
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section" id="conversation">
+
+  <div class="container">
+
+    <div class="conversation">
+
+      <div class="kicker">Conversation Starter</div>
+
+      <h2>
+        Skip the awkward silence.
+      </h2>
+
+      <p style="color:var(--muted);">
+        Choose the situation and 4BF will give you something to talk about.
+      </p>
+
+      <div class="conversation-controls">
+
+        <select id="conversationType">
+          <option value="friend">New Friend</option>
+          <option value="date">First Date</option>
+          <option value="business">Business / Networking</option>
+          <option value="group">Group Hangout</option>
+          <option value="travel">Travel</option>
+        </select>
+
+        <button class="btn btn-primary" onclick="generateQuestion()">
+          Give Me A Question
+        </button>
+
+      </div>
+
+      <div class="question-box" id="questionBox">
+        What's something you've always wanted to try but haven't done yet?
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section section-dark" id="safety">
+
+  <div class="container">
+
+    <div class="section-head">
+      <div class="kicker">Meet Smart</div>
+      <h2>Meeting someone new? Keep it public.</h2>
+      <p>
+        Whether it's a date, new friend, activity partner or business contact,
+        basic precautions are always a good idea.
+      </p>
+    </div>
+
+    <div class="safety-grid">
+
+      <article class="safety-card">
+        <span>🏙️</span>
+        <h3>Meet Publicly</h3>
+        <p>
+          For an initial meeting, choose a populated public location rather
+          than a private residence or isolated area.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>📱</span>
+        <h3>Tell Someone</h3>
+        <p>
+          Consider telling a trusted person where you're going and when
+          you expect to return.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>🚗</span>
+        <h3>Control Your Transportation</h3>
+        <p>
+          Consider arranging transportation that allows you to leave
+          independently whenever you choose.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>🔐</span>
+        <h3>Protect Personal Information</h3>
+        <p>
+          Be thoughtful about sharing your home address, financial information,
+          passwords or other sensitive information.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>💳</span>
+        <h3>Be Alert To Money Requests</h3>
+        <p>
+          Be cautious if a new online contact asks for money, gift cards,
+          financial information or unusual payments.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>🍹</span>
+        <h3>Stay Aware</h3>
+        <p>
+          Keep control of food and drinks and stay aware of your surroundings
+          when meeting someone new.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>🚪</span>
+        <h3>You Can Leave</h3>
+        <p>
+          If a situation makes you uncomfortable, you do not need to remain.
+          Move to a safer environment or leave.
+        </p>
+      </article>
+
+      <article class="safety-card">
+        <span>🚨</span>
+        <h3>Emergency?</h3>
+        <p>
+          If you believe you are in immediate danger in the United States,
+          contact 911 or the appropriate local emergency service.
+        </p>
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+
+  <div class="footer-grid">
+
+    <div>
+
+      <div class="footer-logo">
+        4BF<span>.com</span>
+      </div>
+
+      <p style="max-width:470px;line-height:1.7;">
+        Ideas for friends, dating, fitness, fun, pets, travel,
+        hobbies, business, community and adventure.
+      </p>
+
+      <p style="color:var(--cyan);font-weight:900;">
+        WHAT ARE YOU 4?
+      </p>
+
+    </div>
+
+    <div>
+
+      <h4>Discover</h4>
+
+      <a href="#choose">What Are You 4?</a>
+      <a href="#discover">Explore</a>
+      <a href="#near">Near Me</a>
+      <a href="#generator">Activity Generator</a>
+      <a href="#conversation">Conversation Starter</a>
+
+    </div>
+
+    <div>
+
+      <h4>4BF</h4>
+
+      <a href="#safety">Meet Safely</a>
+      <a href="#near">Local Activities</a>
+      <a href="#generator">Free Ideas</a>
+
+    </div>
+
+  </div>
+
+  <div class="disclaimer">
+
+    <strong>IMPORTANT INFORMATION:</strong>
+    4BF.com is an independent informational and activity-discovery website.
+    It does not operate a dating service, conduct background checks, screen
+    individuals, arrange meetings, guarantee businesses or verify people you
+    may meet through third-party websites or services. External search results,
+    business information, hours, availability and other information can change
+    and should be independently verified. Always use appropriate judgment and
+    safety precautions when meeting someone new or participating in an activity.
+    Activities involve different levels of risk and may not be appropriate for
+    every person. 4BF.com does not provide medical, legal or professional advice.
+
+  </div>
+
+  <div class="footer-bottom">
+
+    <div>
+      © <span id="year"></span> 4BF.com • All Rights Reserved
+    </div>
+
+    <div>
+      NO REGISTRATION • NO PUBLIC PROFILES • NO LOCATION WITHOUT PERMISSION
+    </div>
+
+  </div>
+
+</footer>
+
+<script>
+"use strict";
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+/* ==============================
+   WHAT ARE YOU 4
+================================ */
+
+const goalData = {
+
+  friends:{
+    icon:"👥",
+    title:"You're 4 Friends",
+    text:"Start simple: coffee, a walk, a hobby, a game, a local event or another low-pressure activity.",
+    search:"coffee shop"
+  },
+
+  dating:{
+    icon:"❤️",
+    title:"You're 4 Dating",
+    text:"Try something casual and public: coffee, a park walk, a museum, mini golf, a market or a local attraction.",
+    search:"coffee shop"
+  },
+
+  fitness:{
+    icon:"🏃",
+    title:"You're 4 Fitness",
+    text:"Explore gyms, parks, walking routes, recreation centers and other ways to make activity more social.",
+    search:"gym"
+  },
+
+  fun:{
+    icon:"🎉",
+    title:"You're 4 Fun",
+    text:"Bowling, live entertainment, movies, attractions, parks and local activities are waiting.",
+    search:"bowling"
+  },
+
+  pets:{
+    icon:"🐕",
+    title:"You're 4 Pets",
+    text:"Find dog parks, walking areas and outdoor places where appropriate pet activities may be available.",
+    search:"dog park"
+  },
+
+  travel:{
+    icon:"✈️",
+    title:"You're 4 Travel",
+    text:"Explore nearby attractions, day-trip ideas and places you may never have noticed close to home.",
+    search:"tourist attraction"
+  },
+
+  hobbies:{
+    icon:"🎨",
+    title:"You're 4 Hobbies",
+    text:"Explore activities and businesses connected to the things you already enjoy—or try something completely new.",
+    search:"hobby shop"
+  },
+
+  business:{
+    icon:"💼",
+    title:"You're 4 Business",
+    text:"Explore coworking spaces and public places that can work for professional conversations and networking.",
+    search:"coworking space"
+  },
+
+  community:{
+    icon:"🤝",
+    title:"You're 4 Community",
+    text:"Look for legitimate volunteer organizations, community centers and opportunities to participate locally.",
+    search:"community center"
+  },
+
+  adventure:{
+    icon:"🌎",
+    title:"You're 4 Adventure",
+    text:"Find attractions, parks, trails and destinations that can turn an ordinary day into something different.",
+    search:"tourist attraction"
+  }
+
+};
+
+function chooseGoal(goal,button){
+
+  document
+    .querySelectorAll(".choice")
+    .forEach(function(item){
+      item.classList.remove("active");
+    });
+
+  button.classList.add("active");
+
+  const data =
+    goalData[goal];
+
+  const result =
+    document.getElementById("personalResult");
+
+  result.innerHTML =
+    "<h3>" +
+    data.icon +
+    " " +
+    escapeHTML(data.title) +
+    "</h3>" +
+    "<p>" +
+    escapeHTML(data.text) +
+    "</p>" +
+    "<button class='btn btn-primary' onclick=\"quickNearSearch('" +
+    escapeAttribute(data.search) +
+    "')\">Explore Near Me</button>";
+
+  result.style.display =
+    "block";
+}
+
+/* ==============================
+   LOCATION SEARCH
+================================ */
+
+function searchByLocation(){
+
+  const location =
+    document
+      .getElementById("locationInput")
+      .value
+      .trim();
+
+  const category =
+    document
+      .getElementById("nearCategory")
+      .value;
+
+  const status =
+    document.getElementById("locationStatus");
+
+  if(!location){
+
+    status.textContent =
+      "Enter a city or ZIP code, or choose Use My Location.";
+
+    return;
+  }
+
+  status.textContent =
+    "Opening results for " +
+    category +
+    " near " +
+    location +
+    ".";
+
+  const query =
+    category +
+    " near " +
+    location;
+
+  const url =
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(query);
+
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+function useMyLocation(){
+
+  const status =
+    document.getElementById("locationStatus");
+
+  if(!navigator.geolocation){
+
+    status.textContent =
+      "Location services are not supported by this browser. Enter a city or ZIP code instead.";
+
+    return;
+  }
+
+  status.textContent =
+    "Your browser is requesting location permission...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position){
+
+      const lat =
+        position.coords.latitude;
+
+      const lon =
+        position.coords.longitude;
+
+      const category =
+        document
+          .getElementById("nearCategory")
+          .value;
+
+      status.textContent =
+        "Location received. Opening nearby " +
+        category +
+        " results.";
+
+      const url =
+        "https://www.google.com/maps/search/" +
+        encodeURIComponent(category) +
+        "/@" +
+        lat +
+        "," +
+        lon +
+        ",13z";
+
+      window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    },
+
+    function(){
+
+      status.textContent =
+        "Location permission was not available. Enter a city or ZIP code instead.";
+
+    },
+
+    {
+      enableHighAccuracy:false,
+      timeout:12000,
+      maximumAge:300000
+    }
+
+  );
+}
+
+function quickNearSearch(category){
+
+  document.getElementById("nearCategory").value =
+    optionExists("nearCategory",category)
+      ? category
+      : "tourist attraction";
+
+  document
+    .getElementById("near")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+  const input =
+    document
+      .getElementById("locationInput")
+      .value
+      .trim();
+
+  const status =
+    document.getElementById("locationStatus");
+
+  if(input){
+
+    const url =
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(
+        category +
+        " near " +
+        input
+      );
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }else{
+
+    status.textContent =
+      "Enter your city or ZIP code, or choose Use My Location, to find " +
+      category +
+      " nearby.";
+
+  }
+}
+
+function optionExists(selectId,value){
+
+  const select =
+    document.getElementById(selectId);
+
+  return Array
+    .from(select.options)
+    .some(function(option){
+      return option.value === value;
+    });
+}
+
+/* ENTER SEARCH */
+
+document
+  .getElementById("locationInput")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(event.key === "Enter"){
+        event.preventDefault();
+        searchByLocation();
+      }
+
+    }
+  );
+
+/* ==============================
+   ACTIVITY GENERATOR
+================================ */
+
+const activityIdeas = [
+
+  {
+    icon:"🌳",
+    title:"Take a Park Walk",
+    description:"Choose a well-used public park, put the phones away for a while and simply walk and talk.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Quick","Half"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"☕",
+    title:"Try a New Coffee Shop",
+    description:"Pick a coffee shop you've never visited and make the destination part of the experience.",
+    budget:"Low",
+    setting:"Indoor",
+    time:["Quick"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"📷",
+    title:"Go On a Photo Walk",
+    description:"Explore an interesting public area and challenge yourselves to capture five memorable photographs.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Quick","Half"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🥾",
+    title:"Explore a Local Trail",
+    description:"Choose an appropriate public trail, check conditions first and spend a few hours outdoors.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Half","Full"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🎳",
+    title:"Go Bowling",
+    description:"Bowling gives you something to do while still leaving plenty of time to talk and laugh.",
+    budget:"Medium",
+    setting:"Indoor",
+    time:["Quick","Half"],
+    people:["Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🏛️",
+    title:"Explore a Museum",
+    description:"Find a local museum or gallery and check whether it offers free or discounted admission periods.",
+    budget:"Low",
+    setting:"Indoor",
+    time:["Half"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🥪",
+    title:"Have a Picnic",
+    description:"Bring food from home and choose a pleasant public park instead of another restaurant meal.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Quick","Half"],
+    people:["Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🌅",
+    title:"Find a Sunset View",
+    description:"Choose a safe public scenic spot, arrive before sunset and enjoy the view.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Quick"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"📚",
+    title:"Visit the Library",
+    description:"Explore your local library for books, exhibits, lectures or community activities.",
+    budget:"Free",
+    setting:"Indoor",
+    time:["Quick","Half"],
+    people:["Solo","Friend","Date","Family"]
+  },
+
+  {
+    icon:"🎲",
+    title:"Have a Game Night",
+    description:"Grab cards or board games and turn an ordinary evening into something social.",
+    budget:"Free",
+    setting:"Indoor",
+    time:["Half"],
+    people:["Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🚲",
+    title:"Take a Bike Ride",
+    description:"Choose a route appropriate for everyone involved and explore an area on two wheels.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Quick","Half"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🤝",
+    title:"Volunteer Together",
+    description:"Find a legitimate local nonprofit or community organization and ask about volunteer opportunities.",
+    budget:"Free",
+    setting:"Any",
+    time:["Half","Full"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🏙️",
+    title:"Explore a Nearby Downtown",
+    description:"Pick a nearby town or neighborhood you've rarely visited and explore it on foot during appropriate hours.",
+    budget:"Free",
+    setting:"Outdoor",
+    time:["Half"],
+    people:["Solo","Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"⛳",
+    title:"Try Mini Golf",
+    description:"Keep the competition friendly and make the activity the entertainment instead of sitting across a table.",
+    budget:"Medium",
+    setting:"Any",
+    time:["Quick"],
+    people:["Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🍳",
+    title:"Cook Something New",
+    description:"Choose a recipe neither of you has made before and turn making dinner into the activity.",
+    budget:"Low",
+    setting:"Indoor",
+    time:["Half"],
+    people:["Friend","Date","Group","Family"]
+  },
+
+  {
+    icon:"🎵",
+    title:"Find Live Music",
+    description:"Check local venues or community calendars for a performance that fits your budget.",
+    budget:"Any",
+    setting:"Any",
+    time:["Half"],
+    people:["Solo","Friend","Date","Group"]
+  }
+
+];
+
+function generateIdea(){
+
+  const people =
+    document.getElementById("genPeople").value;
+
+  const budget =
+    document.getElementById("genBudget").value;
+
+  const setting =
+    document.getElementById("genSetting").value;
+
+  const time =
+    document.getElementById("genTime").value;
+
+  let matches =
+    activityIdeas.filter(function(idea){
+
+      const peopleMatch =
+        idea.people.includes(people);
+
+      const settingMatch =
+        setting === "Any" ||
+        idea.setting === setting ||
+        idea.setting === "Any";
+
+      const timeMatch =
+        idea.time.includes(time);
+
+      const budgetMatch =
+        budget === "Any" ||
+        idea.budget === budget ||
+        (
+          budget === "Medium" &&
+          (
+            idea.budget === "Low" ||
+            idea.budget === "Free"
+          )
+        ) ||
+        (
+          budget === "Low" &&
+          idea.budget === "Free"
+        );
+
+      return (
+        peopleMatch &&
+        settingMatch &&
+        timeMatch &&
+        budgetMatch
+      );
+
+    });
+
+  if(!matches.length){
+
+    matches =
+      activityIdeas.filter(function(idea){
+        return idea.people.includes(people);
+      });
+
+  }
+
+  const idea =
+    matches[
+      Math.floor(
+        Math.random() *
+        matches.length
+      )
+    ];
+
+  document.getElementById("ideaIcon").textContent =
+    idea.icon;
+
+  document.getElementById("ideaTitle").textContent =
+    idea.title;
+
+  document.getElementById("ideaDescription").textContent =
+    idea.description;
+}
+
+function jumpToGenerator(person){
+
+  document.getElementById("genPeople").value =
+    person;
+
+  document
+    .getElementById("generator")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+}
+
+/* ==============================
+   CONVERSATION STARTERS
+================================ */
+
+const questions = {
+
+  friend:[
+    "What's something you've always wanted to try but haven't done yet?",
+    "What's the best trip you've ever taken?",
+    "What hobby could you talk about for hours?",
+    "What's your ideal way to spend a completely free Saturday?",
+    "What's something you're surprisingly good at?",
+    "What's one place nearby you think everyone should visit?",
+    "What kind of music do you never get tired of?",
+    "What's the funniest thing that's happened to you recently?"
+  ],
+
+  date:[
+    "What's your idea of a really good weekend?",
+    "If you could take a spontaneous trip tomorrow, where would you go?",
+    "What's something that instantly makes you laugh?",
+    "What's the best concert or live event you've attended?",
+    "Would you rather spend a day at the beach, mountains or exploring a city?",
+    "What's something you would love to learn?",
+    "What's a simple thing that always makes your day better?",
+    "What's one experience you'd love to have this year?"
+  ],
+
+  business:[
+    "What are you working on right now that you're most excited about?",
+    "What problem do you enjoy solving?",
+    "What's one business lesson you learned the hard way?",
+    "What industry trend are you paying attention to?",
+    "What kind of people would you most like to meet professionally?",
+    "If you could improve one part of your business tomorrow, what would it be?",
+    "What originally got you interested in your field?",
+    "What's the most useful business advice you've received?"
+  ],
+
+  group:[
+    "If everyone here could take a trip together, where should we go?",
+    "What's one activity everyone should try at least once?",
+    "What's the funniest movie you've ever seen?",
+    "If we had an entire free day, what should we do?",
+    "What's one food everyone should try?",
+    "Would you rather have a beach day, game night or road trip?",
+    "What's a hidden talent nobody here knows about?",
+    "What should our next group activity be?"
+  ],
+
+  travel:[
+    "What's the most memorable place you've ever visited?",
+    "Would you rather take a road trip or fly somewhere completely new?",
+    "What's one destination still on your bucket list?",
+    "What's the best meal you've ever had while traveling?",
+    "Mountains, beach, city or countryside?",
+    "What's the longest trip you've ever taken?",
+    "Would you rather plan every detail or travel spontaneously?",
+    "What's one place you'd happily visit again?"
+  ]
+
+};
+
+function generateQuestion(){
+
+  const type =
+    document
+      .getElementById("conversationType")
+      .value;
+
+  const list =
+    questions[type];
+
+  const question =
+    list[
+      Math.floor(
+        Math.random() *
+        list.length
+      )
+    ];
+
+  document.getElementById("questionBox").textContent =
+    question;
+}
+
+/* ==============================
+   HELPERS
+================================ */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function escapeAttribute(value){
+
+  return String(value)
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
+}
+
+</script>
+
 </body>
 </html>
